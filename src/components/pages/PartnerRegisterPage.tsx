@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { CheckCircle, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import GoogleLoginButton from "@/components/GoogleLoginButton";
 import { useAuth } from "@/hooks/useAuth";
@@ -22,20 +22,12 @@ const PartnerRegisterPage = () => {
   const [policyAccepted, setPolicyAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [googleProcessing, setGoogleProcessing] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<"monthly" | "yearly">("monthly");
   const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
   const { lang } = useLanguage();
   const { user, hasRole, loading: authLoading } = useAuth();
   const isGooglePartnerSignup = searchParams.get("googleSignup") === "partner";
   const googlePartnerRedirectUri = typeof window !== 'undefined' ? `${window.location.origin}/partner-register?googleSignup=partner` : '';
 
-  const features = [
-    lang === "el" ? "1 Καταχώρηση" : "1 Listing",
-    lang === "el" ? "0% Προμήθειες κρατήσεων" : "0% Booking fees",
-    lang === "el" ? "Free instant booking ή request" : "Free instant booking or request",
-    lang === "el" ? "Free channel manager" : "Free channel manager",
-    lang === "el" ? "Στατιστικά" : "Analytics",
-  ];
 
   useEffect(() => {
     if (!isGooglePartnerSignup || authLoading || !user || googleProcessing) return;
@@ -158,78 +150,9 @@ const PartnerRegisterPage = () => {
             {lang === "el" ? "Προβάλετε την επιχείρησή σας στο About Traveller" : "Showcase your business on About Traveller"}
           </p>
 
-          <div className="grid md:grid-cols-2 gap-8 items-start">
-            {/* Plan selection */}
-            <div className="order-2 md:order-1 space-y-4">
-              <h3 className="text-lg font-bold text-foreground text-center mb-2">
-                {lang === "el" ? "Επιλέξτε πλάνο" : "Select a plan"}
-              </h3>
-              <div className="grid grid-cols-2 gap-4">
-                {/* Monthly */}
-                <button
-                  type="button"
-                  onClick={() => setSelectedPlan("monthly")}
-                  className={`text-left bg-card rounded-2xl border-2 p-5 transition-all duration-200 flex flex-col ${
-                    selectedPlan === "monthly"
-                      ? "border-primary shadow-travel-lg"
-                      : "border-border hover:border-muted-foreground"
-                  }`}
-                >
-                  <div className="h-14 flex flex-col justify-end mb-3">
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-bold text-foreground">15€</span>
-                      <span className="text-[10px] text-muted-foreground font-medium">/μήνα</span>
-                    </div>
-                    <span className="text-[10px] text-foreground mt-0.5 font-bold">+ΦΠΑ</span>
-                  </div>
-                  <h4 className="text-xs font-bold text-foreground mb-4 whitespace-nowrap">
-                    {lang === "el" ? "Πακέτο (1 Μήνας)" : "Monthly Plan"}
-                  </h4>
-                  <ul className="space-y-2">
-                    {features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <CheckCircle size={16} className="text-foreground flex-shrink-0 mt-0.5" />
-                        <span className="text-xs font-bold text-foreground">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </button>
-
-                {/* Yearly */}
-                <button
-                  type="button"
-                  onClick={() => setSelectedPlan("yearly")}
-                  className={`text-left bg-card rounded-2xl border-2 p-5 transition-all duration-200 flex flex-col ${
-                    selectedPlan === "yearly"
-                      ? "border-primary shadow-travel-lg"
-                      : "border-border hover:border-muted-foreground"
-                  }`}
-                >
-                  <div className="h-14 flex flex-col justify-end mb-3">
-                    <span className="text-xs line-through text-muted-foreground/60 font-medium">180€</span>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-bold text-foreground">150€</span>
-                      <span className="text-[10px] text-muted-foreground font-medium">/χρόνο</span>
-                    </div>
-                    <span className="text-[10px] text-foreground mt-0.5 font-bold">+ΦΠΑ</span>
-                  </div>
-                  <h4 className="text-xs font-bold text-foreground mb-4 whitespace-nowrap">
-                    {lang === "el" ? "Πακέτο (1 Χρόνος)" : "Yearly Plan"}
-                  </h4>
-                  <ul className="space-y-2">
-                    {features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <CheckCircle size={16} className="text-foreground flex-shrink-0 mt-0.5" />
-                        <span className="text-xs font-bold text-foreground">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </button>
-              </div>
-            </div>
-
+          <div className="flex justify-center">
             {/* Registration form */}
-            <div className="bg-card rounded-2xl shadow-travel-lg border border-border p-7 order-1 md:order-2">
+            <div className="w-full max-w-md bg-card rounded-2xl shadow-travel-lg border border-border p-7">
               <h2 className="text-lg font-bold text-foreground mb-5">
                 {lang === "el" ? "Στοιχεία Εγγραφής" : "Registration Details"}
               </h2>
