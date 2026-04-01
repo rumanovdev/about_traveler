@@ -127,10 +127,12 @@ const DashboardSidebar = ({ activeTab, onTabChange }: DashboardSidebarProps) => 
       <SidebarHeader className="border-b border-sidebar-border p-4">
         <button
           onClick={() => window.location.href = "/"}
-          className="flex items-center gap-2 text-sm font-semibold text-sidebar-foreground hover:text-primary transition-colors"
+          className="flex items-center gap-2 hover:opacity-80 transition-opacity"
         >
-          <Home size={18} />
-          {!collapsed && <span>About Traveller</span>}
+          {collapsed
+            ? <Home size={18} className="text-sidebar-foreground" />
+            : <img src="/bluecyan.png" alt="About Traveller" className="h-8 w-auto" />
+          }
         </button>
       </SidebarHeader>
 
