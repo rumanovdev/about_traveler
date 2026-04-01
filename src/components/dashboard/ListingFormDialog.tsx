@@ -599,17 +599,25 @@ const ListingFormDialog = ({ open, onOpenChange, listing, userId }: ListingFormD
             />
           </div>
 
+          {/* Address with autocomplete → auto sets lat/lng + location city */}
           <div className="relative" ref={locationRef}>
-            <Label htmlFor="location">{t.lfLocation}</Label>
+            <Label htmlFor="address">
+              {lang === "el" ? "Διεύθυνση επιχείρησης *" : "Business address *"}
+            </Label>
+            <p className="text-xs text-muted-foreground mb-1.5">
+              {lang === "el"
+                ? "Γράψτε τη διεύθυνσή σας και επιλέξτε από τις προτάσεις για ακριβή τοποθεσία στον χάρτη"
+                : "Type your address and select from suggestions for accurate map placement"}
+            </p>
             <Input
-              id="location"
+              id="address"
               value={locationQuery}
               onChange={(e) => {
                 searchLocation(e.target.value);
-                setLocation(e.target.value);
+                setAddress(e.target.value);
               }}
               onBlur={() => setTimeout(closeSuggestions, 200)}
-              placeholder={lang === "el" ? "π.χ. Σαντορίνη" : "e.g. Santorini"}
+              placeholder={lang === "el" ? "π.χ. Λεωφόρος Νίκης 12, Θεσσαλονίκη" : "e.g. Nikis Ave 12, Thessaloniki"}
               autoComplete="off"
             />
             {suggestionsOpen && predictions.length > 0 && (
@@ -620,33 +628,38 @@ const ListingFormDialog = ({ open, onOpenChange, listing, userId }: ListingFormD
                     className="px-3 py-2 text-sm cursor-pointer hover:bg-accent transition-colors"
                     onMouseDown={async () => {
                       selectLocation(p);
-                      setLocation(p.description);
+                      setAddress(p.description);
                       const details = await getPlaceDetails(p.place_id);
                       if (details) {
                         setLatitude(details.lat);
                         setLongitude(details.lng);
                         if (details.address) setAddress(details.address);
+                        // Extract city from address for display on card
+                        const parts = (details.address || p.description).split(",");
+                        const city = parts.find((part) =>
+                          !part.trim().match(/^\d/) && part.trim().length > 2
+                        )?.trim() || parts[0]?.trim() || p.description;
+                        setLocation(city);
+                      } else {
+                        setLocation(p.description);
                       }
                     }}
                   >
-                    {p.description}
+                    <span className="font-medium">{p.description.split(",")[0]}</span>
+                    <span className="text-muted-foreground">{p.description.includes(",") ? ", " + p.description.split(",").slice(1).join(",") : ""}</span>
                   </li>
                 ))}
               </ul>
             )}
-          </div>
-
-          {/* Address (auto-filled from location, editable) */}
-          <div>
-            <Label htmlFor="address">{lang === "el" ? "Πλήρης διεύθυνση" : "Full address"}</Label>
-            <Input
-              id="address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              placeholder={lang === "el" ? "π.χ. Λεωφόρος Νίκης 12, Θεσσαλονίκη 546 25" : "e.g. Nikis 12, Thessaloniki 546 25"}
-            />
-            {latitude && longitude && (
-              <p className="text-xs text-emerald-600 mt-1">✓ {lang === "el" ? "Τοποθεσία εντοπίστηκε στον χάρτη" : "Location found on map"} ({latitude.toFixed(4)}, {longitude.toFixed(4)})</p>
+            {latitude && longitude ? (
+              <p className="text-xs text-emerald-600 mt-1.5 flex items-center gap-1">
+                ✓ {lang === "el" ? "Βρέθηκε στον χάρτη" : "Found on map"}
+                {location && <span className="text-muted-foreground">· Εμφανίζεται ως: <b>{location}</b></span>}
+              </p>
+            ) : address && (
+              <p className="text-xs text-amber-600 mt-1.5">
+                ⚠ {lang === "el" ? "Επιλέξτε από τις προτάσεις για να εντοπιστεί στον χάρτη" : "Select from suggestions to place on map"}
+              </p>
             )}
           </div>
 
