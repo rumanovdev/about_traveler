@@ -1,5 +1,4 @@
-import { motion } from "framer-motion";
-import type { ReactNode } from "react";
+import { useRef, useEffect, useState, type ReactNode } from "react";
 
 interface FadeInSectionProps {
   children: ReactNode;
@@ -7,16 +6,39 @@ interface FadeInSectionProps {
   delay?: number;
 }
 
-const FadeInSection = ({ children, className, delay = 0 }: FadeInSectionProps) => (
-  <motion.div
-    initial={{ opacity: 0, y: 30 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: "-80px" }}
-    transition={{ duration: 0.6, ease: "easeOut", delay }}
-    className={className}
-  >
-    {children}
-  </motion.div>
-);
+const FadeInSection = ({ children, className, delay = 0 }: FadeInSectionProps) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "-80px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={className}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(30px)",
+        transition: `opacity 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
+      }}
+    >
+      {children}
+    </div>
+  );
+};
 
 export default FadeInSection;

@@ -285,10 +285,11 @@ const CategoryPage = ({ slug }: { slug: string }) => {
 
   const fetchSlug = meta.fetchSlugs || slug;
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isFetching } = useQuery({
     queryKey: ["listings", slug, apiFilters, page],
     queryFn: () => getListingsByCategory(fetchSlug, apiFilters, page, PAGE_SIZE),
     enabled: !!slug,
+    placeholderData: (prev) => prev,
   });
 
   const listings = data?.listings ?? (Array.isArray(data) ? data : []);
@@ -340,7 +341,7 @@ const CategoryPage = ({ slug }: { slug: string }) => {
 
       {/* Search & Content */}
       <main className="py-12 md:py-16 bg-background">
-        <div className="container">
+        <div className={`container transition-opacity duration-200 ${isFetching && !isLoading ? "opacity-70" : "opacity-100"}`}>
           {/* Search bar */}
           <div className="max-w-md mx-auto mb-6">
             <div className="relative">

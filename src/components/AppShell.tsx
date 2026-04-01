@@ -1,6 +1,5 @@
 import { lazy, Suspense, useEffect, type ReactNode } from "react";
 import * as Sentry from "@sentry/react";
-import { PostHogProvider } from "@posthog/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
@@ -10,12 +9,16 @@ import { LanguageProvider } from "@/hooks/useLanguage";
 import MobileBottomBar from "@/components/MobileBottomBar";
 import CookieConsent from "@/components/CookieConsent";
 
-const queryClient = new QueryClient();
-
-const posthogOptions = {
-  api_host: "https://eu.i.posthog.com",
-  defaults: "2026-01-30",
-} as const;
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60_000,
+      gcTime: 5 * 60_000,
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 let sentryInitialized = false;
 
@@ -49,35 +52,44 @@ interface AppShellProps {
 
 const AppShell = ({ page, pageProps = {}, children }: AppShellProps) => {
   useEffect(() => {
-    if (!sentryInitialized) {
-      Sentry.init({
-        dsn: "https://a11bcd378564faf302387b6358699253@o4511047411826688.ingest.de.sentry.io/4511047418511440",
-        sendDefaultPii: true,
-      });
-      sentryInitialized = true;
-    }
+    const afterIdle = (cb: () => void) => {
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(cb);
+      } else {
+        setTimeout(cb, 2000);
+      }
+    };
+
+    afterIdle(() => {
+      if (!sentryInitialized) {
+        Sentry.init({
+          dsn: "https://a11bcd378564faf302387b6358699253@o4511047411826688.ingest.de.sentry.io/4511047418511440",
+          sendDefaultPii: true,
+        });
+        sentryInitialized = true;
+      }
+    });
+
   }, []);
 
   const PageComponent = page ? pages[page] : null;
 
   return (
-    <PostHogProvider apiKey="phc_8pP0vGQ32TIW8gr2Luymg4VT0Qwvc5w8eF0Tbwgdrpb" options={posthogOptions}>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <LanguageProvider>
-            <AuthProvider>
-              <Toaster />
-              <Sonner />
-              <Suspense fallback={<div className="min-h-screen" />}>
-                {PageComponent ? <PageComponent {...pageProps} /> : children}
-              </Suspense>
-              <MobileBottomBar />
-              <CookieConsent />
-            </AuthProvider>
-          </LanguageProvider>
-        </TooltipProvider>
-      </QueryClientProvider>
-    </PostHogProvider>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <Toaster />
+            <Sonner />
+            <Suspense fallback={<div className="min-h-screen" />}>
+              {PageComponent ? <PageComponent {...pageProps} /> : children}
+            </Suspense>
+            <MobileBottomBar />
+            <CookieConsent />
+          </AuthProvider>
+        </LanguageProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
   );
 };
 

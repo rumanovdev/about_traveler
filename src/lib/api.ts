@@ -1,5 +1,8 @@
 import { supabase } from "@/integrations/supabase/client";
 
+// In-memory cache for category slug → IDs (stable across the session)
+const _categoryIdCache: Record<string, string[]> = {};
+
 export async function getCategories() {
   const { data, error } = await supabase
     .from("categories")
@@ -9,6 +12,10 @@ export async function getCategories() {
   return data;
 }
 
+// Columns used by ListingCard — avoids fetching the full row
+const LISTING_CARD_COLUMNS =
+  "id, business_name, slug, description, location, phone, images, type, capacity, rooms, beds, price_from, price_to";
+
 export async function getListingsByCategory(
   categorySlug: string,
   filters?: { type?: string[]; recommended?: string[] },
@@ -17,19 +24,27 @@ export async function getListingsByCategory(
 ) {
   // Support fetching from multiple category slugs (e.g. car-rental + moto-rental)
   const slugs = categorySlug.includes(",") ? categorySlug.split(",") : [categorySlug];
+  const cacheKey = [...slugs].sort().join(",");
 
-  const { data: categories } = await supabase
-    .from("categories")
-    .select("id")
-    .in("slug", slugs);
+  // Use cached category IDs when available to avoid the extra round-trip
+  let categoryIds: string[];
+  if (_categoryIdCache[cacheKey]) {
+    categoryIds = _categoryIdCache[cacheKey];
+  } else {
+    const { data: categories } = await supabase
+      .from("categories")
+      .select("id")
+      .in("slug", slugs);
 
-  if (!categories || categories.length === 0) return { listings: [], total: 0 };
+    if (!categories || categories.length === 0) return { listings: [], total: 0 };
 
-  const categoryIds = categories.map((c) => c.id);
+    categoryIds = categories.map((c) => c.id);
+    _categoryIdCache[cacheKey] = categoryIds;
+  }
 
   let query = supabase
     .from("listings")
-    .select("*", { count: "exact" })
+    .select(LISTING_CARD_COLUMNS, { count: "exact" })
     .in("category_id", categoryIds)
     .eq("status", "active");
 
