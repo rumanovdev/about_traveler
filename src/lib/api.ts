@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { pingIndexNow } from "@/lib/indexnow";
 
 // In-memory cache for category slug → IDs (stable across the session)
 const _categoryIdCache: Record<string, string[]> = {};
@@ -212,9 +213,14 @@ export async function updateListingStatus(id: string, status: string) {
     .from("listings")
     .update({ status })
     .eq("id", id)
-    .select()
+    .select("id, slug")
     .single();
   if (error) throw error;
+
+  if (status === "active" && data?.slug) {
+    pingIndexNow([`/listing/${data.slug}`]);
+  }
+
   return data;
 }
 

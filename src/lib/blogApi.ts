@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { pingIndexNow } from "@/lib/indexnow";
 
 export interface BlogPost {
   id: string;
@@ -64,6 +65,11 @@ export async function createBlogPost(post: {
     .select()
     .single();
   if (error) throw error;
+
+  if (post.status === "published") {
+    pingIndexNow([`/blog/${post.slug}`]);
+  }
+
   return data as any;
 }
 
@@ -78,7 +84,13 @@ export async function updateBlogPost(
     .select()
     .single();
   if (error) throw error;
-  return data as any;
+
+  const post = data as any;
+  if (updates.status === "published" && post?.slug) {
+    pingIndexNow([`/blog/${post.slug}`]);
+  }
+
+  return post;
 }
 
 export async function deleteBlogPost(id: string): Promise<void> {
