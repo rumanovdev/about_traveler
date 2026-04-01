@@ -81,7 +81,7 @@ const AppShell = ({ page, pageProps = {}, children }: AppShellProps) => {
           <AuthProvider>
             <Toaster />
             <Sonner />
-            <Suspense fallback={<div className="min-h-screen" />}>
+            <Suspense fallback={null}>
               {PageComponent ? <PageComponent {...pageProps} /> : children}
             </Suspense>
             <MobileBottomBar />
