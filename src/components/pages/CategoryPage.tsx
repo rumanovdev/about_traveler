@@ -344,76 +344,70 @@ const CategoryPage = ({ slug }: { slug: string }) => {
       </section>
 
       {/* Search & Content */}
-      <main className="py-12 md:py-16 bg-background">
-        <div className={`container transition-opacity duration-200 ${isFetching && !isLoading ? "opacity-70" : "opacity-100"}`}>
-          {/* Search bar */}
-          <div className="max-w-md mx-auto mb-6">
-            <div className="relative">
-              <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Αναζήτηση..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 rounded-full border border-border bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-shadow"
-              />
-            </div>
-          </div>
+      <main className="py-8 bg-background">
+        <div className={`transition-opacity duration-200 ${isFetching && !isLoading ? "opacity-70" : "opacity-100"}`}>
+          {/* Top bar: search + filters + map toggle — Airbnb style */}
+          <div className="px-4 md:px-8 mb-6">
+            <div className="flex flex-wrap items-center gap-3">
+              {/* Search */}
+              <div className="relative flex-1 min-w-[200px] max-w-xs">
+                <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <input
+                  type="text"
+                  placeholder="Αναζήτηση..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 rounded-full border border-border bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-shadow"
+                />
+              </div>
 
-          {/* Filters */}
-          {(categoryFilters[slug || ""] || []).length > 0 && (
-            <div className="mb-8">
-              {isMobile ? (
-                <MobileFilterSheet
-                  filterGroups={categoryFilters[slug || ""] || []}
-                  activeFilters={activeFilters}
-                  onApplyFilters={(f) => { setActiveFilters(f); setPage(0); }}
-                />
-              ) : (
-                <CategoryFilters
-                  filterGroups={categoryFilters[slug || ""] || []}
-                  activeFilters={activeFilters}
-                  onApplyFilters={(f) => { setActiveFilters(f); setPage(0); }}
-                />
+              {/* Filters */}
+              {(categoryFilters[slug || ""] || []).length > 0 && (
+                isMobile ? (
+                  <MobileFilterSheet
+                    filterGroups={categoryFilters[slug || ""] || []}
+                    activeFilters={activeFilters}
+                    onApplyFilters={(f) => { setActiveFilters(f); setPage(0); }}
+                  />
+                ) : (
+                  <CategoryFilters
+                    filterGroups={categoryFilters[slug || ""] || []}
+                    activeFilters={activeFilters}
+                    onApplyFilters={(f) => { setActiveFilters(f); setPage(0); }}
+                  />
+                )
               )}
-            </div>
-          )}
 
-          {/* Results header */}
-          {!isLoading && (
-            <div className="flex items-center justify-between mb-6">
-              <p className="text-sm text-muted-foreground">
-                Εμφάνιση {rangeStart} - {rangeEnd} από {total} αποτελέσματα
-              </p>
-              <p className="text-sm text-muted-foreground hidden sm:block">
-                Ταξινόμηση κατά προσφορότητα & νεότερο
-              </p>
+              <div className="ml-auto flex items-center gap-3">
+                {!isLoading && (
+                  <span className="text-sm text-muted-foreground hidden md:block">
+                    {total} αποτελέσματα
+                  </span>
+                )}
+                {/* Map toggle */}
+                <button
+                  onClick={() => setShowMap((v) => !v)}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-border bg-card text-sm font-medium hover:bg-accent transition-colors shadow-sm"
+                >
+                  {showMap ? <><LayoutGrid size={15} /><span className="hidden sm:inline">Λίστα</span></> : <><Map size={15} /><span className="hidden sm:inline">Χάρτης</span></>}
+                </button>
+              </div>
             </div>
-          )}
-
-          {/* Map toggle button */}
-          <div className="flex justify-end mb-4">
-            <button
-              onClick={() => setShowMap((v) => !v)}
-              className="flex items-center gap-2 px-4 py-2 rounded-full border border-border text-sm font-medium hover:bg-accent transition-colors"
-            >
-              {showMap ? <><LayoutGrid size={15} /> Λίστα μόνο</> : <><Map size={15} /> Εμφάνιση χάρτη</>}
-            </button>
           </div>
 
-          {/* Split view: listings + map */}
-          <div className={showMap ? "flex gap-6 items-start" : ""}>
-            {/* Listings */}
-            <div className={showMap ? "flex-1 min-w-0" : "w-full"}>
+          {/* Split view — Airbnb layout */}
+          <div className={showMap && !isMobile ? "flex items-start" : "px-4 md:px-8"}>
+
+            {/* LEFT: Scrollable listings */}
+            <div className={showMap && !isMobile ? "w-[54%] px-4 md:px-8 overflow-y-auto" : "w-full"} style={showMap && !isMobile ? { maxHeight: "calc(100vh - 180px)" } : {}}>
               {isLoading ? (
-                <div className={`grid gap-5 ${showMap ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"}`}>
+                <div className="grid grid-cols-2 gap-5">
                   {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="rounded-2xl overflow-hidden animate-pulse">
+                    <div key={i} className="rounded-2xl animate-pulse">
                       <div className="aspect-[4/3] bg-muted rounded-2xl" />
                       <div className="pt-3 space-y-2">
                         <div className="h-4 bg-muted rounded w-3/4" />
                         <div className="h-3 bg-muted rounded w-1/2" />
-                        <div className="h-4 bg-muted rounded w-1/3" />
                       </div>
                     </div>
                   ))}
@@ -425,7 +419,7 @@ const CategoryPage = ({ slug }: { slug: string }) => {
                   </p>
                 </div>
               ) : (
-                <div className={`grid gap-5 ${showMap ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"}`}>
+                <div className={`grid gap-5 ${showMap && !isMobile ? "grid-cols-2" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"}`}>
                   {filteredListings.map((listing: any) => (
                     <ListingCard
                       key={listing.id}
@@ -438,10 +432,10 @@ const CategoryPage = ({ slug }: { slug: string }) => {
               )}
             </div>
 
-            {/* Sticky Map */}
+            {/* RIGHT: Sticky map — dominant like Airbnb */}
             {showMap && !isMobile && (
-              <div className="hidden lg:block w-[45%] shrink-0 sticky top-24" style={{ height: "calc(100vh - 120px)" }}>
-                <Suspense fallback={<div className="w-full h-full rounded-2xl bg-muted animate-pulse" />}>
+              <div className="hidden lg:block flex-1 sticky top-20" style={{ height: "calc(100vh - 80px)" }}>
+                <Suspense fallback={<div className="w-full h-full bg-muted animate-pulse" />}>
                   <ListingsMap
                     listings={filteredListings.filter((l: any) => l.latitude && l.longitude)}
                     hoveredId={hoveredListingId}
