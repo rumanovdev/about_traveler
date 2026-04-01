@@ -14,7 +14,14 @@ const MobileBottomBar = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const { query, predictions, isOpen, search, select, close } = usePlacesAutocomplete();
 
-  if (path.startsWith("/dashboard") || path.startsWith("/admin")) return null;
+  const isCategoryOrListing =
+    path.startsWith("/diamonh") ||
+    path.startsWith("/car-moto") ||
+    path.startsWith("/restaurants") ||
+    path.startsWith("/activities") ||
+    path.startsWith("/listing/");
+
+  if (path.startsWith("/dashboard") || path.startsWith("/admin") || isCategoryOrListing) return null;
 
   const categories = [
     { label: t.accommodation, slug: "diamonh", icon: Building },
