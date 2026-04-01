@@ -2,7 +2,7 @@
 import NotFound from "@/components/pages/NotFound";
 import { useQuery } from "@tanstack/react-query";
 import { Search, ChevronLeft, ChevronRight, Map, LayoutGrid } from "lucide-react";
-import { useState, lazy, Suspense } from "react";
+import { useState, lazy, Suspense, useEffect, useRef } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ListingCard from "@/components/ListingCard";
@@ -274,6 +274,18 @@ const CategoryPage = ({ slug }: { slug: string }) => {
   const [page, setPage] = useState(0);
   const [hoveredListingId, setHoveredListingId] = useState<string | null>(null);
   const [showMap, setShowMap] = useState(true);
+  const [barVisible, setBarVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const currentY = window.scrollY;
+      setBarVisible(currentY < 80 || currentY < lastScrollY.current);
+      lastScrollY.current = currentY;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // If slug is not a valid category, show 404
   if (!slug || !validSlugs.includes(slug)) {
@@ -346,8 +358,8 @@ const CategoryPage = ({ slug }: { slug: string }) => {
       {/* Search & Content */}
       <main className="py-8 bg-background">
         <div className={`transition-opacity duration-200 ${isFetching && !isLoading ? "opacity-70" : "opacity-100"}`}>
-          {/* Top bar: search + filters + map toggle — Airbnb style */}
-          <div className="px-4 md:px-8 mb-6">
+          {/* Top bar: search + filters + map toggle — hides on scroll down */}
+          <div className={`sticky top-16 z-30 bg-background/95 backdrop-blur-sm border-b border-border px-4 md:px-8 py-3 mb-6 transition-transform duration-300 ${barVisible ? "translate-y-0" : "-translate-y-full"}`}>
             <div className="flex flex-wrap items-center gap-3">
               {/* Search */}
               <div className="relative flex-1 min-w-[200px] max-w-xs">
