@@ -9,9 +9,11 @@ interface Props {
   type?: string;
   jsonLd?: object | object[];
   noindex?: boolean;
+  preloadImage?: string;
+  bodyBg?: string;
 }
 
-const { title, description, path, image, type = "website", jsonLd, noindex } = Astro.props;
+const { title, description, path, image, type = "website", jsonLd, noindex, preloadImage, bodyBg } = Astro.props;
 const siteUrl = "https://aboutraveller.com";
 const fullUrl = `${siteUrl}${path}`;
 const fullTitle = title.includes("About Traveller") ? title : `${title} | About Traveller`;
@@ -19,14 +21,6 @@ const fullTitle = title.includes("About Traveller") ? title : `${title} | About 
 <!doctype html>
 <html lang="el">
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-S7XKMPDXVD"></script>
-    <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-S7XKMPDXVD');
-    </script>
     <meta charset="UTF-8" />
     <meta name="msvalidate.01" content="D105F18496DEC8BD6DDBE4BA067A30C7" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -41,16 +35,31 @@ const fullTitle = title.includes("About Traveller") ? title : `${title} | About 
           <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         </>
     }
+
+    <!-- Favicon -->
     <link rel="icon" href="/white.png" type="image/png" />
     <link rel="icon" href="/favicon.png" type="image/png" sizes="192x192" />
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="apple-touch-icon" href="/favicon.png" />
 
+    <!-- Preload LCP image (passed per page) -->
+    {preloadImage && (
+      <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />
+    )}
+
+    <!-- Resource hints -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+
+    <!-- Fonts: async non-blocking load -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" media="print" onload="this.media='all'" />
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" /></noscript>
+
+    <!-- Instant body background before React hydrates (eliminates white flash) -->
+    {bodyBg && <style set:html={`body{background:${bodyBg};}`} />}
 
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
@@ -82,5 +91,20 @@ const fullTitle = title.includes("About Traveller") ? title : `${title} | About 
   </head>
   <body>
     <slot />
+
+    <!-- Google Analytics: deferred after page load to not block rendering -->
+    <script is:inline>
+      window.addEventListener('load', function () {
+        var s = document.createElement('script');
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-S7XKMPDXVD';
+        s.async = true;
+        document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', 'G-S7XKMPDXVD');
+      });
+    </script>
   </body>
 </html>
