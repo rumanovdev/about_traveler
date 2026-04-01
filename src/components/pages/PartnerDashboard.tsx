@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 
 import { useLanguage } from "@/hooks/useLanguage";
 import { useQuery } from "@tanstack/react-query";
@@ -7,7 +7,8 @@ import { supabase } from "@/integrations/supabase/client";
 import ListingCard from "@/components/ListingCard";
 import { Heart, Plus } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
-import DashboardOverview from "@/components/dashboard/DashboardOverview";
+
+const DashboardOverview = lazy(() => import("@/components/dashboard/DashboardOverview"));
 import DashboardListings from "@/components/dashboard/DashboardListings";
 import DashboardSubscription from "@/components/dashboard/DashboardSubscription";
 import DashboardInvoices from "@/components/dashboard/DashboardInvoices";
@@ -146,7 +147,11 @@ const PartnerDashboard = () => {
   const renderContent = () => {
     switch (activeTab) {
       case "overview":
-        return <DashboardOverview listings={listings} analytics={analytics} subscription={subscription} />;
+        return (
+          <Suspense fallback={<div className="h-64 animate-pulse bg-muted rounded-xl" />}>
+            <DashboardOverview listings={listings} analytics={analytics} subscription={subscription} />
+          </Suspense>
+        );
       case "listings":
         return <DashboardListings listings={listings} loading={listingsLoading} onEdit={handleEdit} subscription={subscription} />;
       case "subscription":

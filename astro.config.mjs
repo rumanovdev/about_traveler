@@ -19,17 +19,12 @@ export default defineConfig({
       rollupOptions: {
         output: {
           manualChunks(id) {
-            if (id.includes('node_modules/@sentry')) {
-              return 'vendor-analytics';
-            }
-            if (id.includes('node_modules/framer-motion')) {
-              return 'vendor-animation';
-            }
-            if (id.includes('node_modules/recharts') || id.includes('node_modules/d3-')) {
-              return 'vendor-charts';
-            }
             if (id.includes('node_modules/@supabase')) {
               return 'vendor-supabase';
+            }
+            // React ecosystem - single shared chunk
+            if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
+              return 'vendor-react';
             }
           },
         },

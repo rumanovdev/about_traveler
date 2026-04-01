@@ -1,13 +1,12 @@
 import { lazy, Suspense, useEffect, type ReactNode } from "react";
-import * as Sentry from "@sentry/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/useAuth";
 import { LanguageProvider } from "@/hooks/useLanguage";
-import MobileBottomBar from "@/components/MobileBottomBar";
-import CookieConsent from "@/components/CookieConsent";
+const MobileBottomBar = lazy(() => import("@/components/MobileBottomBar"));
+const CookieConsent = lazy(() => import("@/components/CookieConsent"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -60,8 +59,9 @@ const AppShell = ({ page, pageProps = {}, children }: AppShellProps) => {
       }
     };
 
-    afterIdle(() => {
+    afterIdle(async () => {
       if (!sentryInitialized) {
+        const Sentry = await import("@sentry/react");
         Sentry.init({
           dsn: "https://a11bcd378564faf302387b6358699253@o4511047411826688.ingest.de.sentry.io/4511047418511440",
           sendDefaultPii: true,
@@ -84,8 +84,8 @@ const AppShell = ({ page, pageProps = {}, children }: AppShellProps) => {
             <Suspense fallback={null}>
               {PageComponent ? <PageComponent {...pageProps} /> : children}
             </Suspense>
-            <MobileBottomBar />
-            <CookieConsent />
+            <Suspense fallback={null}><MobileBottomBar /></Suspense>
+            <Suspense fallback={null}><CookieConsent /></Suspense>
           </AuthProvider>
         </LanguageProvider>
       </TooltipProvider>
