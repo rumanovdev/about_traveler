@@ -146,13 +146,31 @@ export const POST: APIRoute = async ({ request }) => {
       }
     }
 
-    // Clean up leftover placeholders
-    parsed.content = (parsed.content as string).replace(
-      /src="IMAGE_PLACEHOLDER"/g,
-      `src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1200&q=80"`
-    );
+    // Curated Greece photos for placeholders — no API key needed
+    const GREECE_PHOTOS = [
+      "photo-1533105079780-92b9be482077",
+      "photo-1516483638261-f4dbaf036963",
+      "photo-1555993539-1732b0258235",
+      "photo-1601581975053-7c199baba43a",
+      "photo-1613395877344-13d4a8e0d49e",
+      "photo-1606820854416-439b3305ff39",
+      "photo-1467269204594-9661b134dd2b",
+      "photo-1504512485720-7d83a16ee930",
+      "photo-1569949381669-ecf31ae8e613",
+      "photo-1571406761955-b89a7f9dee17",
+    ];
+    const randomPhoto = () => {
+      const id = GREECE_PHOTOS[Math.floor(Math.random() * GREECE_PHOTOS.length)];
+      return `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=80`;
+    };
+    parsed.content = (parsed.content as string).replace(/IMAGE_PLACEHOLDER/g, randomPhoto);
 
     const slug = slugify(parsed.title) + "-" + Date.now().toString(36);
+
+    // Use curated Greece photo as fallback if no Pexels image
+    if (!featuredImage) {
+      featuredImage = randomPhoto();
+    }
 
     return new Response(
       JSON.stringify({
