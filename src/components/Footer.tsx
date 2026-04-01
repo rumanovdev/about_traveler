@@ -9,7 +9,9 @@ const Footer = () => {
       <div className="container">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-xl font-display font-bold text-primary-foreground mb-4">About Traveller</h3>
+            <a href="/" className="inline-block mb-4">
+              <img src="/white.png" alt="About Traveller" className="h-12 w-auto" />
+            </a>
             <p className="text-base text-primary-foreground">{t.footerDescription}</p>
           </div>
           <div>
