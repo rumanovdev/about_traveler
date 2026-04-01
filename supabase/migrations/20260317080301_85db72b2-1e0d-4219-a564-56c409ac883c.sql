@@ -1,0 +1,1 @@
+ALTER TABLE public.listings ADD COLUMN website text DEFAULT NULL;

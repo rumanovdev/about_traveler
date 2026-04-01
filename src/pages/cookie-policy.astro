@@ -1,0 +1,11 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AppShell from '../components/AppShell';
+---
+<Layout
+  title="Πολιτική Cookies"
+  description="Πολιτική cookies του About Traveller"
+  path="/cookie-policy"
+>
+  <AppShell client:only="react" page="CookiePolicyPage" />
+</Layout>

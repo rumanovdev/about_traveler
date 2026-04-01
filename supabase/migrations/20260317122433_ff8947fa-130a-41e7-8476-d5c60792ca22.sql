@@ -1,0 +1,2 @@
+ALTER TABLE public.listings DROP CONSTRAINT listings_status_check;
+ALTER TABLE public.listings ADD CONSTRAINT listings_status_check CHECK (status = ANY (ARRAY['active'::text, 'pending'::text, 'hidden'::text, 'rejected'::text, 'draft'::text]));

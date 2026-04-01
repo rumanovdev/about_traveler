@@ -1,0 +1,9 @@
+{
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/sitemap.xml",
+      "destination": "https://naauctowmzoltqtpwsqd.supabase.co/functions/v1/sitemap"
+    }
+  ]
+}

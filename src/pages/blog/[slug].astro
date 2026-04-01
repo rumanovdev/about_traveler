@@ -1,0 +1,13 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AppShell from '../../components/AppShell';
+
+const { slug } = Astro.params;
+---
+<Layout
+  title="Blog | About Traveller"
+  description="Ταξιδιωτικό άρθρο στο About Traveller"
+  path={`/blog/${slug}`}
+>
+  <AppShell client:only="react" page="BlogPostPage" pageProps={{ slug }} />
+</Layout>

@@ -1,0 +1,12 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AppShell from '../components/AppShell';
+---
+<Layout
+  title="Πίνακας Ελέγχου"
+  description="Διαχειριστείτε τις καταχωρίσεις και τη συνδρομή σας στο About Traveller."
+  path="/dashboard"
+  noindex
+>
+  <AppShell client:only="react" page="PartnerDashboard" />
+</Layout>

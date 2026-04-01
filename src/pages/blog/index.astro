@@ -1,0 +1,11 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AppShell from '../../components/AppShell';
+---
+<Layout
+  title="Blog - Ταξιδιωτικά Άρθρα"
+  description="Ταξιδιωτικά άρθρα, συμβουλές και οδηγοί για τις διακοπές σας στην Ελλάδα."
+  path="/blog"
+>
+  <AppShell client:only="react" page="BlogPage" />
+</Layout>

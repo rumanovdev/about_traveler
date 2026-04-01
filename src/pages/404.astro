@@ -1,0 +1,12 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AppShell from '../components/AppShell';
+---
+<Layout
+  title="Σελίδα δεν βρέθηκε"
+  description="Η σελίδα που ψάχνετε δεν υπάρχει."
+  path="/404"
+  noindex
+>
+  <AppShell client:only="react" page="NotFound" />
+</Layout>

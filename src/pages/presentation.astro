@@ -1,0 +1,12 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AppShell from '../components/AppShell';
+---
+<Layout
+  title="Παρουσίαση"
+  description="Παρουσίαση του About Traveller"
+  path="/presentation"
+  noindex
+>
+  <AppShell client:only="react" page="PresentationPage" />
+</Layout>

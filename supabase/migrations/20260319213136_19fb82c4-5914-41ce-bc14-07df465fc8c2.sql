@@ -1,0 +1,2 @@
+UPDATE blog_posts SET featured_image = 'https://adzkzmhqokkkhanwnrxc.supabase.co/storage/v1/object/public/listing-images/blog/island-hopping-featured.png' WHERE id = '9619ce71-6731-4fc3-a8ba-5446de2d8163';
+UPDATE blog_posts SET featured_image = 'https://adzkzmhqokkkhanwnrxc.supabase.co/storage/v1/object/public/listing-images/blog/markets-bazaars-featured.png' WHERE id = '7500ea99-6d04-4f69-9895-a569b6c7297b';

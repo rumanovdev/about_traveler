@@ -1,0 +1,11 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AppShell from '../components/AppShell';
+---
+<Layout
+  title="Το Business Model μας"
+  description="Μάθετε πώς το About Traveller προσφέρει 0% προμήθεια και βοηθά την επιχείρησή σας να αναπτυχθεί."
+  path="/business-model"
+>
+  <AppShell client:only="react" page="BusinessModelPage" />
+</Layout>

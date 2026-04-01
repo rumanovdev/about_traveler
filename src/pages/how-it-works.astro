@@ -1,0 +1,11 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AppShell from '../components/AppShell';
+---
+<Layout
+  title="Πώς Λειτουργεί"
+  description="Μάθετε πώς λειτουργεί η πλατφόρμα About Traveller για ταξιδιώτες και επιχειρήσεις."
+  path="/how-it-works"
+>
+  <AppShell client:only="react" page="HowItWorksPage" />
+</Layout>

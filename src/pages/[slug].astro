@@ -1,0 +1,34 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AppShell from '../components/AppShell';
+
+const { slug } = Astro.params;
+
+const categoryMeta: Record<string, { title: string; description: string }> = {
+  diamonh: {
+    title: "Διαμονή στην Ελλάδα | Ξενοδοχεία & Καταλύματα",
+    description: "Βρείτε ξενοδοχεία, βίλες και καταλύματα σε όλη την Ελλάδα.",
+  },
+  "car-moto": {
+    title: "Car & Moto Rental Ελλάδα | Ενοικίαση Αυτοκινήτου & Μηχανής",
+    description: "Ανακαλύψτε εταιρείες ενοικίασης αυτοκινήτων και μηχανών σε όλη την Ελλάδα.",
+  },
+  restaurants: {
+    title: "Φαγητό & Ποτό Ελλάδα | Προτάσεις Φαγητού",
+    description: "Ανακαλύψτε φαγητό και ποτό σε όλη την Ελλάδα.",
+  },
+  activities: {
+    title: "Δραστηριότητες στην Ελλάδα | Activities & Εμπειρίες",
+    description: "Ανακαλύψτε δραστηριότητες και εμπειρίες σε όλη την Ελλάδα.",
+  },
+};
+
+const meta = categoryMeta[slug!] || { title: "About Traveller", description: "" };
+---
+<Layout
+  title={meta.title}
+  description={meta.description}
+  path={`/${slug}`}
+>
+  <AppShell client:only="react" page="CategoryPage" pageProps={{ slug }} />
+</Layout>

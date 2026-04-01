@@ -1,0 +1,11 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AppShell from '../components/AppShell';
+---
+<Layout
+  title="Όροι και Προϋποθέσεις"
+  description="Όροι και προϋποθέσεις χρήσης του About Traveller"
+  path="/terms"
+>
+  <AppShell client:only="react" page="TermsPage" />
+</Layout>

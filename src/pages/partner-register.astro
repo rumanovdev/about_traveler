@@ -1,0 +1,11 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AppShell from '../components/AppShell';
+---
+<Layout
+  title="Εγγραφή Επιχείρησης"
+  description="Εγγραφείτε ως επιχείρηση στο About Traveller και προβάλετε τις υπηρεσίες σας."
+  path="/partner-register"
+>
+  <AppShell client:only="react" page="PartnerRegisterPage" />
+</Layout>
