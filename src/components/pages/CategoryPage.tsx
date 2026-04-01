@@ -434,7 +434,7 @@ const CategoryPage = ({ slug }: { slug: string }) => {
 
             {/* RIGHT: Sticky map — dominant like Airbnb */}
             {showMap && !isMobile && (
-              <div className="hidden lg:block flex-1 sticky top-20" style={{ height: "calc(100vh - 80px)" }}>
+              <div className="hidden lg:block flex-1 sticky top-20" style={{ height: "calc(100vh - 160px)" }}>
                 <Suspense fallback={<div className="w-full h-full bg-muted animate-pulse" />}>
                   <ListingsMap
                     listings={filteredListings.filter((l: any) => l.latitude && l.longitude)}
