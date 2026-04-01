@@ -1,7 +1,5 @@
 import { Menu, X, User, LogOut, ChevronDown, Globe } from "lucide-react";
-const logo = "/assets/atr_full_lightblue.svg";
-const logoBlue = "/assets/atr_full_blue.svg";
-const logoDeepBlue = "/assets/atr_full_deepblue.svg";
+const logo = "/assets/atr_full_white.svg";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -37,7 +35,7 @@ const Header = () => {
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-foreground/80 backdrop-blur-md shadow-lg" : isTransparent ? "bg-transparent" : "bg-foreground/70 backdrop-blur-md"}`}>
       <div className="container flex items-center justify-center md:justify-between h-16">
         <a href="/" className="flex items-center">
-          <img src={isHome ? logo : isTransparent ? logoDeepBlue : logoBlue} alt="About Traveller" className="h-8" />
+          <img src={logo} alt="About Traveller" className="h-8" />
         </a>
 
         <nav className="hidden md:flex items-center gap-1">
