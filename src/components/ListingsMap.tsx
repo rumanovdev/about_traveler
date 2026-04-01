@@ -50,6 +50,7 @@ const ListingsMap = ({ listings, hoveredId, center }: ListingsMapProps) => {
       });
 
       const map = L.map(mapRef.current, {
+        attributionControl: false,
         center: defaultCenter,
         zoom: 7,
         zoomControl: true,
@@ -57,7 +58,7 @@ const ListingsMap = ({ listings, hoveredId, center }: ListingsMapProps) => {
       });
 
       L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
+        attribution: '',
         subdomains: "abcd",
         maxZoom: 20,
       }).addTo(map);
