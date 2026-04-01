@@ -6,7 +6,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { getAllBlogPosts, deleteBlogPost, type BlogPost } from "@/lib/blogApi";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Trash2, Eye, FileText } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Plus, Edit, Trash2, Eye, FileText, Sparkles, X, Loader2 } from "lucide-react";
 import BlogPostEditor from "./BlogPostEditor";
 
 const AdminBlogManager = () => {
@@ -15,6 +17,58 @@ const AdminBlogManager = () => {
   const queryClient = useQueryClient();
   const [editPost, setEditPost] = useState<BlogPost | null>(null);
   const [showEditor, setShowEditor] = useState(false);
+
+  // AI generation state
+  const [showAiModal, setShowAiModal] = useState(false);
+  const [aiTopic, setAiTopic] = useState("");
+  const [aiKeywords, setAiKeywords] = useState("");
+  const [aiLang, setAiLang] = useState<"el" | "en">("el");
+  const [aiLoading, setAiLoading] = useState(false);
+
+  const handleAiGenerate = async () => {
+    if (!aiTopic.trim()) {
+      toast.error(lang === "el" ? "Εισάγετε θέμα" : "Enter a topic");
+      return;
+    }
+    setAiLoading(true);
+    try {
+      const res = await fetch("/api/generate-blog", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic: aiTopic, keywords: aiKeywords, lang: aiLang }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Generation failed");
+      }
+      const generated = await res.json();
+      // Open editor with pre-filled AI content
+      setEditPost({
+        id: "",
+        title: generated.title,
+        slug: generated.slug,
+        excerpt: generated.excerpt,
+        content: generated.content,
+        featured_image: generated.featured_image || null,
+        meta_title: generated.meta_title,
+        meta_description: generated.meta_description,
+        status: "draft",
+        author_id: user?.id || "",
+        published_at: null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+      setShowAiModal(false);
+      setAiTopic("");
+      setAiKeywords("");
+      setShowEditor(true);
+      toast.success(lang === "el" ? "Το άρθρο δημιουργήθηκε! Ελέγξτε και δημοσιεύστε." : "Post generated! Review and publish.");
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   const { data: posts = [], isLoading } = useQuery({
     queryKey: ["admin-blog-posts"],
@@ -53,14 +107,103 @@ const AdminBlogManager = () => {
 
   return (
     <div className="space-y-4">
+      {/* AI Generate Modal */}
+      {showAiModal && (
+        <div className="fixed inset-0 bg-foreground/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-card rounded-2xl shadow-travel-lg w-full max-w-md p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Sparkles size={20} className="text-primary" />
+                <h3 className="text-lg font-display font-bold text-foreground">
+                  {lang === "el" ? "AI Δημιουργία Άρθρου" : "AI Blog Generation"}
+                </h3>
+              </div>
+              <button onClick={() => setShowAiModal(false)} className="text-muted-foreground hover:text-foreground">
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <Label className="text-sm font-medium">{lang === "el" ? "Θέμα άρθρου *" : "Article topic *"}</Label>
+                <Input
+                  value={aiTopic}
+                  onChange={(e) => setAiTopic(e.target.value)}
+                  placeholder={lang === "el" ? "π.χ. Τα καλύτερα νησιά για οικογένειες" : "e.g. Best islands for families"}
+                  className="mt-1"
+                  disabled={aiLoading}
+                />
+              </div>
+              <div>
+                <Label className="text-sm font-medium">{lang === "el" ? "Keywords SEO (προαιρετικά)" : "SEO Keywords (optional)"}</Label>
+                <Input
+                  value={aiKeywords}
+                  onChange={(e) => setAiKeywords(e.target.value)}
+                  placeholder={lang === "el" ? "π.χ. ταξίδι, Ελλάδα, διακοπές" : "e.g. travel, Greece, vacation"}
+                  className="mt-1"
+                  disabled={aiLoading}
+                />
+              </div>
+              <div>
+                <Label className="text-sm font-medium">{lang === "el" ? "Γλώσσα" : "Language"}</Label>
+                <div className="flex gap-2 mt-1">
+                  <button
+                    onClick={() => setAiLang("el")}
+                    className={`flex-1 py-2 rounded-lg text-sm font-medium border transition-colors ${aiLang === "el" ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground hover:border-primary"}`}
+                  >
+                    🇬🇷 Ελληνικά
+                  </button>
+                  <button
+                    onClick={() => setAiLang("en")}
+                    className={`flex-1 py-2 rounded-lg text-sm font-medium border transition-colors ${aiLang === "en" ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground hover:border-primary"}`}
+                  >
+                    🇬🇧 English
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-2 pt-2">
+              <Button variant="outline" className="flex-1" onClick={() => setShowAiModal(false)} disabled={aiLoading}>
+                {lang === "el" ? "Ακύρωση" : "Cancel"}
+              </Button>
+              <Button className="flex-1" onClick={handleAiGenerate} disabled={aiLoading}>
+                {aiLoading ? (
+                  <>
+                    <Loader2 size={16} className="mr-2 animate-spin" />
+                    {lang === "el" ? "Δημιουργία..." : "Generating..."}
+                  </>
+                ) : (
+                  <>
+                    <Sparkles size={16} className="mr-2" />
+                    {lang === "el" ? "Δημιούργησε" : "Generate"}
+                  </>
+                )}
+              </Button>
+            </div>
+            {aiLoading && (
+              <p className="text-xs text-center text-muted-foreground">
+                {lang === "el" ? "Η AI γράφει το άρθρο... ~15 δευτερόλεπτα" : "AI is writing the article... ~15 seconds"}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-display font-bold text-foreground">
           {lang === "el" ? "Άρθρα Blog" : "Blog Posts"}
         </h2>
-        <Button onClick={() => { setEditPost(null); setShowEditor(true); }}>
-          <Plus size={16} className="mr-2" />
-          {lang === "el" ? "Νέο Άρθρο" : "New Post"}
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setShowAiModal(true)}>
+            <Sparkles size={16} className="mr-2 text-primary" />
+            {lang === "el" ? "AI Δημιουργία" : "AI Generate"}
+          </Button>
+          <Button onClick={() => { setEditPost(null); setShowEditor(true); }}>
+            <Plus size={16} className="mr-2" />
+            {lang === "el" ? "Νέο Άρθρο" : "New Post"}
+          </Button>
+        </div>
       </div>
 
       {isLoading ? (

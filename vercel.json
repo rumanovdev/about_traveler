@@ -1,3 +1,9 @@
 {
-  "trailingSlash": false
+  "trailingSlash": false,
+  "crons": [
+    {
+      "path": "/api/auto-blog",
+      "schedule": "0 7 * * *"
+    }
+  ]
 }
