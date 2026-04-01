@@ -19,7 +19,6 @@ const queryClient = new QueryClient({
   },
 });
 
-let sentryInitialized = false;
 
 const pages: Record<string, React.LazyExoticComponent<any>> = {
   Index: lazy(() => import("@/components/pages/Index")),
@@ -50,27 +49,6 @@ interface AppShellProps {
 }
 
 const AppShell = ({ page, pageProps = {}, children }: AppShellProps) => {
-  useEffect(() => {
-    const afterIdle = (cb: () => void) => {
-      if ("requestIdleCallback" in window) {
-        requestIdleCallback(cb);
-      } else {
-        setTimeout(cb, 2000);
-      }
-    };
-
-    afterIdle(async () => {
-      if (!sentryInitialized) {
-        const Sentry = await import("@sentry/react");
-        Sentry.init({
-          dsn: "https://a11bcd378564faf302387b6358699253@o4511047411826688.ingest.de.sentry.io/4511047418511440",
-          sendDefaultPii: true,
-        });
-        sentryInitialized = true;
-      }
-    });
-
-  }, []);
 
   const PageComponent = page ? pages[page] : null;
 
