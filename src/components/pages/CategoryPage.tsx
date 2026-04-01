@@ -1,8 +1,8 @@
 
 import NotFound from "@/components/pages/NotFound";
 import { useQuery } from "@tanstack/react-query";
-import { Search, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { Search, ChevronLeft, ChevronRight, Map, LayoutGrid } from "lucide-react";
+import { useState, lazy, Suspense } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ListingCard from "@/components/ListingCard";
@@ -13,6 +13,8 @@ import MobileFilterSheet from "@/components/MobileFilterSheet";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { getListingsByCategory } from "@/lib/api";
 import { expandLocationQuery } from "@/lib/greekLocationMap";
+
+const ListingsMap = lazy(() => import("@/components/ListingsMap"));
 
 const catAccommodation = "/assets/cat-accommodation.jpg";
 const catCarRental = "/assets/cat-car-rental.jpg";
@@ -270,6 +272,8 @@ const CategoryPage = ({ slug }: { slug: string }) => {
   const [searchQuery, setSearchQuery] = useState(locationParam);
   const [activeFilters, setActiveFilters] = useState<Record<string, string[]>>({});
   const [page, setPage] = useState(0);
+  const [hoveredListingId, setHoveredListingId] = useState<string | null>(null);
+  const [showMap, setShowMap] = useState(true);
 
   // If slug is not a valid category, show 404
   if (!slug || !validSlugs.includes(slug)) {
@@ -387,33 +391,65 @@ const CategoryPage = ({ slug }: { slug: string }) => {
             </div>
           )}
 
-          {/* Listings Grid */}
-          {isLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="bg-card rounded-2xl overflow-hidden shadow-sm animate-pulse">
-                  <div className="aspect-[4/3] bg-muted" />
-                  <div className="p-5 space-y-3">
-                    <div className="h-5 bg-muted rounded-lg w-3/4" />
-                    <div className="h-4 bg-muted rounded-lg w-1/2" />
-                    <div className="h-4 bg-muted rounded-lg w-full" />
-                  </div>
+          {/* Map toggle button */}
+          <div className="flex justify-end mb-4">
+            <button
+              onClick={() => setShowMap((v) => !v)}
+              className="flex items-center gap-2 px-4 py-2 rounded-full border border-border text-sm font-medium hover:bg-accent transition-colors"
+            >
+              {showMap ? <><LayoutGrid size={15} /> Λίστα μόνο</> : <><Map size={15} /> Εμφάνιση χάρτη</>}
+            </button>
+          </div>
+
+          {/* Split view: listings + map */}
+          <div className={showMap ? "flex gap-6 items-start" : ""}>
+            {/* Listings */}
+            <div className={showMap ? "flex-1 min-w-0" : "w-full"}>
+              {isLoading ? (
+                <div className={`grid gap-5 ${showMap ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"}`}>
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="rounded-2xl overflow-hidden animate-pulse">
+                      <div className="aspect-[4/3] bg-muted rounded-2xl" />
+                      <div className="pt-3 space-y-2">
+                        <div className="h-4 bg-muted rounded w-3/4" />
+                        <div className="h-3 bg-muted rounded w-1/2" />
+                        <div className="h-4 bg-muted rounded w-1/3" />
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              ) : filteredListings.length === 0 ? (
+                <div className="text-center py-20">
+                  <p className="text-muted-foreground text-lg">
+                    Δεν βρέθηκαν καταχωρίσεις{searchQuery ? " για την αναζήτησή σας" : " σε αυτήν την κατηγορία"}.
+                  </p>
+                </div>
+              ) : (
+                <div className={`grid gap-5 ${showMap ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"}`}>
+                  {filteredListings.map((listing: any) => (
+                    <ListingCard
+                      key={listing.id}
+                      listing={listing}
+                      onHover={setHoveredListingId}
+                      highlighted={hoveredListingId === listing.id}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
-          ) : filteredListings.length === 0 ? (
-            <div className="text-center py-20">
-              <p className="text-muted-foreground text-lg">
-                Δεν βρέθηκαν καταχωρίσεις{searchQuery ? " για την αναζήτησή σας" : " σε αυτήν την κατηγορία"}.
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredListings.map((listing: any) => (
-                <ListingCard key={listing.id} listing={listing} />
-              ))}
-            </div>
-          )}
+
+            {/* Sticky Map */}
+            {showMap && !isMobile && (
+              <div className="hidden lg:block w-[45%] shrink-0 sticky top-24" style={{ height: "calc(100vh - 120px)" }}>
+                <Suspense fallback={<div className="w-full h-full rounded-2xl bg-muted animate-pulse" />}>
+                  <ListingsMap
+                    listings={filteredListings.filter((l: any) => l.latitude && l.longitude)}
+                    hoveredId={hoveredListingId}
+                  />
+                </Suspense>
+              </div>
+            )}
+          </div>
 
           {/* Pagination */}
           {totalPages > 1 && (

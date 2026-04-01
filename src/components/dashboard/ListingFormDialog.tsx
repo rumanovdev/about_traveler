@@ -37,6 +37,54 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { getCategories, createListing, updateListing, uploadListingImage } from "@/lib/api";
 import { usePlacesAutocomplete } from "@/hooks/usePlacesAutocomplete";
+
+const AMENITIES_BY_CATEGORY: Record<string, { value: string; labelEl: string; icon: string }[]> = {
+  diamonh: [
+    { value: "wifi", labelEl: "WiFi", icon: "📶" },
+    { value: "pool", labelEl: "Πισίνα", icon: "🏊" },
+    { value: "parking", labelEl: "Parking", icon: "🅿️" },
+    { value: "ac", labelEl: "A/C", icon: "❄️" },
+    { value: "kitchen", labelEl: "Κουζίνα", icon: "🍳" },
+    { value: "breakfast", labelEl: "Πρωινό", icon: "☕" },
+    { value: "sea-view", labelEl: "Θέα θάλασσα", icon: "🌊" },
+    { value: "balcony", labelEl: "Μπαλκόνι", icon: "🏠" },
+    { value: "pets", labelEl: "Κατοικίδια OK", icon: "🐾" },
+    { value: "jacuzzi", labelEl: "Jacuzzi", icon: "🛁" },
+    { value: "gym", labelEl: "Γυμναστήριο", icon: "💪" },
+    { value: "bbq", labelEl: "BBQ", icon: "🔥" },
+  ],
+  restaurants: [
+    { value: "wifi", labelEl: "WiFi", icon: "📶" },
+    { value: "parking", labelEl: "Parking", icon: "🅿️" },
+    { value: "outdoor", labelEl: "Εξωτερικός χώρος", icon: "🌿" },
+    { value: "sea-view", labelEl: "Θέα θάλασσα", icon: "🌊" },
+    { value: "live-music", labelEl: "Live μουσική", icon: "🎵" },
+    { value: "delivery", labelEl: "Delivery", icon: "🛵" },
+    { value: "takeaway", labelEl: "Take away", icon: "📦" },
+    { value: "vegan-options", labelEl: "Vegan επιλογές", icon: "🥗" },
+    { value: "pets", labelEl: "Pet friendly", icon: "🐾" },
+    { value: "reservation", labelEl: "Κρατήσεις", icon: "📅" },
+  ],
+  activities: [
+    { value: "equipment", labelEl: "Εξοπλισμός included", icon: "🎒" },
+    { value: "instructor", labelEl: "Εκπαιδευτής", icon: "👨‍🏫" },
+    { value: "transfer", labelEl: "Transfer", icon: "🚌" },
+    { value: "photos", labelEl: "Φωτογραφίες included", icon: "📸" },
+    { value: "insurance", labelEl: "Ασφάλεια", icon: "🛡️" },
+    { value: "kids", labelEl: "Κατάλληλο για παιδιά", icon: "👶" },
+    { value: "beginner", labelEl: "Για αρχάριους", icon: "⭐" },
+  ],
+  "car-rental": [
+    { value: "ac", labelEl: "A/C", icon: "❄️" },
+    { value: "gps", labelEl: "GPS", icon: "🗺️" },
+    { value: "automatic", labelEl: "Αυτόματο", icon: "⚙️" },
+    { value: "unlimited-km", labelEl: "Unlimited km", icon: "🛣️" },
+    { value: "insurance", labelEl: "Ασφάλεια", icon: "🛡️" },
+    { value: "delivery", labelEl: "Παράδοση στο σπίτι", icon: "🚗" },
+    { value: "airport", labelEl: "Pickup αεροδρόμιο", icon: "✈️" },
+    { value: "child-seat", labelEl: "Παιδικό κάθισμα", icon: "👶" },
+  ],
+};
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -157,7 +205,7 @@ const ListingFormDialog = ({ open, onOpenChange, listing, userId }: ListingFormD
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [location, setLocation] = useState("");
-  const { query: locationQuery, predictions, isOpen: suggestionsOpen, search: searchLocation, select: selectLocation, close: closeSuggestions, setQuery: setLocationQuery } = usePlacesAutocomplete();
+  const { query: locationQuery, predictions, isOpen: suggestionsOpen, search: searchLocation, select: selectLocation, close: closeSuggestions, setQuery: setLocationQuery, getPlaceDetails } = usePlacesAutocomplete();
   const [images, setImages] = useState<string[]>([]);
   const [policyAccepted, setPolicyAccepted] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -170,6 +218,10 @@ const ListingFormDialog = ({ open, onOpenChange, listing, userId }: ListingFormD
   const [priceFrom, setPriceFrom] = useState<string>("");
   const [priceTo, setPriceTo] = useState<string>("");
   const [website, setWebsite] = useState("");
+  const [address, setAddress] = useState("");
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
+  const [amenities, setAmenities] = useState<string[]>([]);
 
   const normalizeUrl = (url: string): string | null => {
     if (!url || !url.trim()) return null;
@@ -211,6 +263,10 @@ const ListingFormDialog = ({ open, onOpenChange, listing, userId }: ListingFormD
       setPriceFrom(listing.price_from?.toString() || "");
       setPriceTo(listing.price_to?.toString() || "");
       setWebsite(listing.website || "");
+      setAddress(listing.address || "");
+      setLatitude(listing.latitude ?? null);
+      setLongitude(listing.longitude ?? null);
+      setAmenities(listing.amenities || []);
     } else {
       setBusinessName("");
       setCategoryId("");
@@ -228,6 +284,10 @@ const ListingFormDialog = ({ open, onOpenChange, listing, userId }: ListingFormD
       setPriceFrom("");
       setPriceTo("");
       setWebsite("");
+      setAddress("");
+      setLatitude(null);
+      setLongitude(null);
+      setAmenities([]);
     }
   }, [listing, open]);
 
@@ -289,6 +349,12 @@ const ListingFormDialog = ({ open, onOpenChange, listing, userId }: ListingFormD
     );
   };
 
+  const toggleAmenity = (value: string) => {
+    setAmenities((prev) =>
+      prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
+    );
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!policyAccepted && !isEditing) {
@@ -310,6 +376,10 @@ const ListingFormDialog = ({ open, onOpenChange, listing, userId }: ListingFormD
           phone,
           email,
           location,
+          address: address || null,
+          latitude,
+          longitude,
+          amenities: amenities.length ? amenities : null,
           images,
           type: listingType || undefined,
           recommended_for: recommendedFor,
@@ -332,6 +402,10 @@ const ListingFormDialog = ({ open, onOpenChange, listing, userId }: ListingFormD
           phone,
           email,
           location,
+          address: address || null,
+          latitude,
+          longitude,
+          amenities: amenities.length ? amenities : null,
           images,
           content_policy_accepted: policyAccepted,
           status: hasRole("admin") ? "active" : "draft",
@@ -544,9 +618,15 @@ const ListingFormDialog = ({ open, onOpenChange, listing, userId }: ListingFormD
                   <li
                     key={p.place_id}
                     className="px-3 py-2 text-sm cursor-pointer hover:bg-accent transition-colors"
-                    onMouseDown={() => {
+                    onMouseDown={async () => {
                       selectLocation(p);
                       setLocation(p.description);
+                      const details = await getPlaceDetails(p.place_id);
+                      if (details) {
+                        setLatitude(details.lat);
+                        setLongitude(details.lng);
+                        if (details.address) setAddress(details.address);
+                      }
                     }}
                   >
                     {p.description}
@@ -555,6 +635,38 @@ const ListingFormDialog = ({ open, onOpenChange, listing, userId }: ListingFormD
               </ul>
             )}
           </div>
+
+          {/* Address (auto-filled from location, editable) */}
+          <div>
+            <Label htmlFor="address">{lang === "el" ? "Πλήρης διεύθυνση" : "Full address"}</Label>
+            <Input
+              id="address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder={lang === "el" ? "π.χ. Λεωφόρος Νίκης 12, Θεσσαλονίκη 546 25" : "e.g. Nikis 12, Thessaloniki 546 25"}
+            />
+            {latitude && longitude && (
+              <p className="text-xs text-emerald-600 mt-1">✓ {lang === "el" ? "Τοποθεσία εντοπίστηκε στον χάρτη" : "Location found on map"} ({latitude.toFixed(4)}, {longitude.toFixed(4)})</p>
+            )}
+          </div>
+
+          {/* Amenities */}
+          {(AMENITIES_BY_CATEGORY[selectedCategorySlug] || AMENITIES_BY_CATEGORY["car-rental"])?.length > 0 && (
+            <div>
+              <Label>{lang === "el" ? "Ανέσεις & Υπηρεσίες" : "Amenities & Services"}</Label>
+              <div className="grid grid-cols-2 gap-2 mt-2">
+                {(AMENITIES_BY_CATEGORY[selectedCategorySlug] || AMENITIES_BY_CATEGORY["car-rental"] || []).map((a) => (
+                  <label key={a.value} className="flex items-center gap-2 cursor-pointer text-sm p-2 rounded-lg border border-border hover:border-primary transition-colors">
+                    <Checkbox
+                      checked={amenities.includes(a.value)}
+                      onCheckedChange={() => toggleAmenity(a.value)}
+                    />
+                    <span>{a.icon} {a.labelEl}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Image upload with drag & drop reorder */}
           <div>
