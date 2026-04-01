@@ -379,8 +379,8 @@ const CategoryPage = ({ slug }: { slug: string }) => {
           {/* Split view — Airbnb layout */}
           <div className={showMap && !isMobile ? "flex items-start" : "px-4 md:px-8"}>
 
-            {/* LEFT: Scrollable listings */}
-            <div className={showMap && !isMobile ? "w-[54%] px-4 md:px-8 overflow-y-auto" : "w-full"} style={showMap && !isMobile ? { maxHeight: "calc(100vh - 180px)" } : {}}>
+            {/* LEFT: Listings — page scrolls naturally */}
+            <div className={showMap && !isMobile ? "w-[54%] px-4 md:px-8" : "w-full"}>
               {isLoading ? (
                 <div className="grid grid-cols-2 gap-5">
                   {[1, 2, 3, 4].map((i) => (
@@ -413,9 +413,9 @@ const CategoryPage = ({ slug }: { slug: string }) => {
               )}
             </div>
 
-            {/* RIGHT: Sticky map — dominant like Airbnb */}
+            {/* RIGHT: Sticky map — stays fixed while page scrolls */}
             {showMap && !isMobile && (
-              <div className="hidden lg:block flex-1 sticky top-20 pr-6" style={{ height: "calc(100vh - 160px)" }}>
+              <div className="hidden lg:block flex-1 sticky top-20 pr-6 self-start" style={{ height: "calc(100vh - 90px)" }}>
                 <Suspense fallback={<div className="w-full h-full rounded-2xl bg-muted animate-pulse" />}>
                   <ListingsMap
                     listings={filteredListings.filter((l: any) => l.latitude && l.longitude)}
