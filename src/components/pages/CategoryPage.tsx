@@ -415,7 +415,7 @@ const CategoryPage = ({ slug }: { slug: string }) => {
 
             {/* RIGHT: Sticky map — stays fixed while page scrolls */}
             {showMap && !isMobile && (
-              <div className="hidden lg:block flex-1 sticky top-20 pr-6 self-start" style={{ height: "calc(100vh - 90px)" }}>
+              <div className="hidden lg:block flex-1 sticky top-20 pr-6 self-start" style={{ height: "calc(100vh - 160px)" }}>
                 <Suspense fallback={<div className="w-full h-full rounded-2xl bg-muted animate-pulse" />}>
                   <ListingsMap
                     listings={filteredListings.filter((l: any) => l.latitude && l.longitude)}
