@@ -99,8 +99,8 @@ export const POST: APIRoute = async ({ request }) => {
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "claude-opus-4-5",
-        max_tokens: 4096,
+        model: "claude-haiku-4-5",
+        max_tokens: 3000,
         system: isGreek
           ? "Είσαι ένας έμπειρος συγγραφέας ταξιδιωτικού περιεχομένου. Γράφεις αποκλειστικά στα Ελληνικά, με φυσικό ανθρώπινο ύφος. Επιστρέφεις ΠΑΝΤΑ valid JSON."
           : "You are an experienced travel content writer. You write exclusively in English, with a natural human style. You ALWAYS return valid JSON.",
