@@ -70,6 +70,20 @@ async function fetchPexelsImage(keywords: string, apiKey: string): Promise<strin
 }
 
 export const POST: APIRoute = async ({ request }) => {
+  // Only allow requests from same origin (admin dashboard) or with CRON_SECRET
+  const origin = request.headers.get("origin");
+  const referer = request.headers.get("referer");
+  const authHeader = request.headers.get("authorization");
+  const cronSecret = import.meta.env.CRON_SECRET;
+  const siteUrl = "aboutraveller.com";
+
+  const isFromSite = (origin?.includes(siteUrl) || referer?.includes(siteUrl) || origin?.includes("localhost") || referer?.includes("localhost"));
+  const hasValidSecret = cronSecret && authHeader === `Bearer ${cronSecret}`;
+
+  if (!isFromSite && !hasValidSecret) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
+  }
+
   const apiKey = import.meta.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     return new Response(JSON.stringify({ error: "ANTHROPIC_API_KEY not set" }), { status: 500 });
