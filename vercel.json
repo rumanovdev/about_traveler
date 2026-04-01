@@ -1,9 +1,5 @@
 {
   "trailingSlash": false,
-  "functions": {
-    "src/pages/api/generate-blog.ts": { "maxDuration": 60 },
-    "src/pages/api/auto-blog.ts": { "maxDuration": 90 }
-  },
   "crons": [
     {
       "path": "/api/auto-blog",
