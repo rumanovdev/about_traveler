@@ -51,12 +51,14 @@ export const GET: APIRoute = async () => {
       .from("listings")
       .select("slug, updated_at")
       .eq("status", "active")
-      .order("updated_at", { ascending: false }),
+      .order("updated_at", { ascending: false })
+      .range(0, 9999),
     supabase
       .from("blog_posts" as any)
       .select("slug, updated_at")
       .eq("status", "published")
-      .order("updated_at", { ascending: false }),
+      .order("updated_at", { ascending: false })
+      .range(0, 9999),
   ]);
 
   const staticEntries = STATIC_PAGES.map((p) =>
