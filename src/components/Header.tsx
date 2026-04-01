@@ -1,5 +1,5 @@
 import { Menu, X, User, LogOut, ChevronDown, Globe } from "lucide-react";
-const logo = "/assets/atr_full_white.svg";
+const logo = "/assets/atr_full_lightblue.svg";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
