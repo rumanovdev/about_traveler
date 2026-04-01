@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { lovable } from "@/integrations/lovable/index";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -12,46 +11,27 @@ const GoogleLoginButton = ({ redirectUri }: GoogleLoginButtonProps) => {
   const [loading, setLoading] = useState(false);
   const { lang } = useLanguage();
 
-  const shouldUseDirectOAuth = () => {
-    try {
-      return window.self === window.top && !window.location.hostname.endsWith(".lovable.app");
-    } catch {
-      return false;
-    }
-  };
-
   const handleGoogleLogin = async () => {
     setLoading(true);
 
     try {
-      const targetRedirect = redirectUri ?? window.location.origin;
+      const redirectTo = redirectUri ?? `${window.location.origin}/`;
 
-      if (shouldUseDirectOAuth()) {
-        const { data, error } = await supabase.auth.signInWithOAuth({
-          provider: "google",
-          options: {
-            redirectTo: targetRedirect,
-            queryParams: {
-              prompt: "select_account",
-            },
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo,
+          queryParams: {
+            prompt: "select_account",
           },
-        });
-
-        if (error) throw error;
-        if (data?.url) {
-          window.location.assign(data.url);
-          return;
-        }
-      }
-
-      const { error } = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: targetRedirect,
-        extraParams: {
-          prompt: "select_account",
         },
       });
 
       if (error) throw error;
+
+      if (data?.url) {
+        window.location.assign(data.url);
+      }
     } catch (err: any) {
       toast.error(err.message || (lang === "el" ? "Σφάλμα σύνδεσης με Google" : "Google login failed"));
       setLoading(false);
