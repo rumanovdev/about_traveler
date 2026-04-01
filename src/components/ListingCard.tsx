@@ -90,15 +90,16 @@ const ListingCard = ({ listing, onHover, highlighted }: ListingCardProps) => {
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        {/* All images stacked, only active one visible */}
+        {/* All images stacked — all preloaded, no lazy */}
         {images.map((src, i) => (
           <img
             key={src}
             src={src}
             alt={listing.business_name}
-            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-400"
+            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-200"
             style={{ opacity: i === imgIdx ? 1 : 0, zIndex: i === imgIdx ? 1 : 0 }}
-            loading={i === 0 ? "eager" : "lazy"}
+            loading="eager"
+            decoding="async"
           />
         ))}
 
@@ -107,10 +108,10 @@ const ListingCard = ({ listing, onHover, highlighted }: ListingCardProps) => {
           <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/30 to-transparent z-10 pointer-events-none rounded-b-2xl" />
         )}
 
-        {/* Dots */}
+        {/* Dots — ακριβώς όσα images έχει */}
         {images.length > 1 && (
           <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-1 z-20 pointer-events-none">
-            {images.slice(0, 8).map((_, i) => (
+            {images.map((_, i) => (
               <span
                 key={i}
                 className="block rounded-full transition-all duration-200"
