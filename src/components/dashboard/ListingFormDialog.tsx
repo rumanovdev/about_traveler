@@ -36,7 +36,7 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { getCategories, createListing, updateListing, uploadListingImage } from "@/lib/api";
-import { usePlacesAutocomplete } from "@/hooks/usePlacesAutocomplete";
+import { usePlacesAutocomplete, loadGoogleMaps } from "@/hooks/usePlacesAutocomplete";
 
 const AMENITIES_BY_CATEGORY: Record<string, { value: string; labelEl: string; icon: string }[]> = {
   diamonh: [
@@ -234,6 +234,7 @@ const ListingFormDialog = ({ open, onOpenChange, listing, userId }: ListingFormD
 
   useEffect(() => {
     getCategories().then(setCategories).catch(console.error);
+    loadGoogleMaps();
   }, []);
 
   const selectedCategorySlug = categories.find((c) => c.id === categoryId)?.slug || "";
@@ -693,9 +694,27 @@ const ListingFormDialog = ({ open, onOpenChange, listing, userId }: ListingFormD
                 {location && <span className="text-muted-foreground">· Εμφανίζεται ως: <b>{location}</b></span>}
               </p>
             ) : address && (
-              <p className="text-xs text-amber-600 mt-1.5">
-                ⚠ {lang === "el" ? "Επιλέξτε από τις προτάσεις για να εντοπιστεί στον χάρτη" : "Select from suggestions to place on map"}
-              </p>
+              <div className="flex items-center gap-2 mt-1.5">
+                <p className="text-xs text-amber-600 flex-1">
+                  ⚠ {lang === "el" ? "Δεν βρέθηκαν συντεταγμένες — επιλέξτε από τις προτάσεις ή πατήστε Εντοπισμός" : "No coordinates — select from suggestions or click Locate"}
+                </p>
+                <button
+                  type="button"
+                  className="text-xs px-2 py-1 rounded border border-border bg-accent hover:bg-accent/80 transition-colors whitespace-nowrap"
+                  onClick={async () => {
+                    const coords = await geocodeAddress(address);
+                    if (coords) {
+                      setLatitude(coords.lat);
+                      setLongitude(coords.lng);
+                      toast.success(lang === "el" ? "Βρέθηκε στον χάρτη!" : "Found on map!");
+                    } else {
+                      toast.error(lang === "el" ? "Δεν βρέθηκε η διεύθυνση. Δοκιμάστε να επιλέξετε από τις προτάσεις." : "Address not found. Try selecting from suggestions.");
+                    }
+                  }}
+                >
+                  📍 {lang === "el" ? "Εντοπισμός" : "Locate"}
+                </button>
+              </div>
             )}
           </div>
 

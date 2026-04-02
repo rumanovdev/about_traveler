@@ -23,7 +23,7 @@ declare global {
 let mapsLoading = false;
 let mapsReady = false;
 
-function loadGoogleMaps() {
+export function loadGoogleMaps() {
   if (window.google?.maps?.places || mapsReady) {
     mapsReady = true;
     return;
