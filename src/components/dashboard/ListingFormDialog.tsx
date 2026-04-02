@@ -252,7 +252,7 @@ const ListingFormDialog = ({ open, onOpenChange, listing, userId }: ListingFormD
       setPhone(listing.phone || "");
       setEmail(listing.email || "");
       setLocation(listing.location || "");
-      setLocationQuery(listing.location || "");
+      setLocationQuery(listing.address || listing.location || "");
       setImages(listing.images || []);
       setPolicyAccepted(true);
       setListingType(listing.type || "");
@@ -355,6 +355,27 @@ const ListingFormDialog = ({ open, onOpenChange, listing, userId }: ListingFormD
     );
   };
 
+  const geocodeAddress = async (addr: string): Promise<{ lat: number; lng: number } | null> => {
+    try {
+      if (!window.google?.maps) return null;
+      const geocoder = new google.maps.Geocoder();
+      return await new Promise((resolve) => {
+        geocoder.geocode({ address: addr, region: "gr" }, (results, status) => {
+          if (status === "OK" && results?.[0]?.geometry?.location) {
+            resolve({
+              lat: results[0].geometry.location.lat(),
+              lng: results[0].geometry.location.lng(),
+            });
+          } else {
+            resolve(null);
+          }
+        });
+      });
+    } catch {
+      return null;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!policyAccepted && !isEditing) {
@@ -367,6 +388,21 @@ const ListingFormDialog = ({ open, onOpenChange, listing, userId }: ListingFormD
     }
 
     setSaving(true);
+
+    let finalLat = latitude;
+    let finalLng = longitude;
+
+    // If address is set but no lat/lng (user didn't select from autocomplete), geocode it
+    if (address && !finalLat && !finalLng) {
+      const coords = await geocodeAddress(address);
+      if (coords) {
+        finalLat = coords.lat;
+        finalLng = coords.lng;
+        setLatitude(coords.lat);
+        setLongitude(coords.lng);
+      }
+    }
+
     try {
       if (isEditing) {
         await updateListing(listing.id, {
@@ -377,8 +413,8 @@ const ListingFormDialog = ({ open, onOpenChange, listing, userId }: ListingFormD
           email,
           location,
           address: address || null,
-          latitude,
-          longitude,
+          latitude: finalLat,
+          longitude: finalLng,
           amenities: amenities.length ? amenities : null,
           images,
           type: listingType || undefined,
@@ -403,8 +439,8 @@ const ListingFormDialog = ({ open, onOpenChange, listing, userId }: ListingFormD
           email,
           location,
           address: address || null,
-          latitude,
-          longitude,
+          latitude: finalLat,
+          longitude: finalLng,
           amenities: amenities.length ? amenities : null,
           images,
           content_policy_accepted: policyAccepted,
