@@ -34,7 +34,7 @@ const ListingsMap = ({ listings, hoveredId, center }: ListingsMapProps) => {
   const markersRef = useRef<Map<string, any>>(new Map());
   const [mapReady, setMapReady] = useState(false);
 
-  const defaultCenter: [number, number] = center || [37.98, 23.73];
+  const defaultCenter: [number, number] = [38.5, 24.5]; // Greece overview
 
   // Initialize map once
   useEffect(() => {
@@ -53,7 +53,7 @@ const ListingsMap = ({ listings, hoveredId, center }: ListingsMapProps) => {
       const map = L.map(mapRef.current, {
         attributionControl: false,
         center: defaultCenter,
-        zoom: 7,
+        zoom: 6,
         zoomControl: true,
         scrollWheelZoom: true,
       });
@@ -146,13 +146,6 @@ const ListingsMap = ({ listings, hoveredId, center }: ListingsMapProps) => {
       markersRef.current.set(listing.id, marker);
     });
 
-    // Fit bounds to show all markers
-    if (validListings.length > 1) {
-      const bounds = L.latLngBounds(validListings.map((l) => [l.latitude, l.longitude]));
-      map.fitBounds(bounds, { padding: [40, 40] });
-    } else if (validListings.length === 1) {
-      map.setView([validListings[0].latitude, validListings[0].longitude], 13);
-    }
   }, [listings, mapReady]);
 
   // Pan map when center prop changes (location search)
