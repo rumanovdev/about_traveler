@@ -15,7 +15,7 @@ export async function getCategories() {
 
 // Columns used by ListingCard — avoids fetching the full row
 const LISTING_CARD_COLUMNS =
-  "id, business_name, slug, description, location, phone, images, type, capacity, rooms, beds, price_from, price_to";
+  "id, business_name, slug, description, location, phone, images, type, capacity, rooms, beds, price_from, price_to, latitude, longitude";
 
 export async function getListingsByCategory(
   categorySlug: string,
