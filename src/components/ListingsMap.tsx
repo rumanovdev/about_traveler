@@ -69,24 +69,44 @@ const ListingsMap = ({ listings, hoveredId, center }: ListingsMapProps) => {
       listings.forEach((listing) => {
         if (!listing.latitude || !listing.longitude) return;
 
-        const label = listing.price_from ? `€${Math.round(listing.price_from)}` : "•";
+        const label = listing.price_from ? `€${Math.round(listing.price_from)}` : null;
 
         const icon = L.divIcon({
           className: "",
-          html: `<div class="map-price-pin" data-id="${listing.id}" style="
-            background:#fff;
-            border:2px solid #222;
-            border-radius:20px;
-            padding:4px 10px;
-            font-size:12px;
-            font-weight:700;
-            color:#222;
-            white-space:nowrap;
-            box-shadow:0 2px 8px rgba(0,0,0,0.18);
-            cursor:pointer;
-            transition:all 0.15s;
-          ">${label}</div>`,
-          iconAnchor: [20, 16],
+          html: `
+            <div class="map-price-pin" data-id="${listing.id}" style="
+              position:relative;
+              display:inline-flex;
+              flex-direction:column;
+              align-items:center;
+              cursor:pointer;
+              transition:transform 0.15s;
+              filter:drop-shadow(0 3px 6px rgba(0,0,0,0.22));
+            ">
+              ${label ? `
+                <div style="
+                  background:#1a1a1a;
+                  color:#fff;
+                  border-radius:24px;
+                  padding:5px 11px;
+                  font-size:12px;
+                  font-weight:700;
+                  white-space:nowrap;
+                  letter-spacing:-0.2px;
+                  line-height:1;
+                ">${label}</div>
+                <svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-top:-1px">
+                  <path d="M5 7L0 0H10L5 7Z" fill="#1a1a1a"/>
+                </svg>
+              ` : `
+                <svg width="28" height="36" viewBox="0 0 28 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M14 0C6.268 0 0 6.268 0 14C0 24.5 14 36 14 36C14 36 28 24.5 28 14C28 6.268 21.732 0 14 0Z" fill="#1a1a1a"/>
+                  <circle cx="14" cy="14" r="5" fill="white"/>
+                </svg>
+              `}
+            </div>
+          `,
+          iconAnchor: label ? [28, 40] : [14, 36],
         });
 
         const marker = L.marker([listing.latitude, listing.longitude], { icon })
@@ -127,15 +147,13 @@ const ListingsMap = ({ listings, hoveredId, center }: ListingsMapProps) => {
       const el = marker.getElement()?.querySelector(".map-price-pin") as HTMLElement | null;
       if (!el) return;
       if (id === hoveredId) {
-        el.style.background = "#222";
-        el.style.color = "#fff";
-        el.style.transform = "scale(1.15)";
+        el.style.transform = "scale(1.18) translateY(-2px)";
+        el.style.filter = "drop-shadow(0 6px 12px rgba(0,0,0,0.35))";
         el.style.zIndex = "1000";
         marker.setZIndexOffset(1000);
       } else {
-        el.style.background = "#fff";
-        el.style.color = "#222";
         el.style.transform = "scale(1)";
+        el.style.filter = "drop-shadow(0 3px 6px rgba(0,0,0,0.22))";
         el.style.zIndex = "";
         marker.setZIndexOffset(0);
       }
