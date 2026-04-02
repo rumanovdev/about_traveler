@@ -274,6 +274,7 @@ const CategoryPage = ({ slug }: { slug: string }) => {
   const [page, setPage] = useState(0);
   const [hoveredListingId, setHoveredListingId] = useState<string | null>(null);
   const [showMap, setShowMap] = useState(true);
+  const [mapCenter, setMapCenter] = useState<[number, number] | undefined>(undefined);
 
   // If slug is not a valid category, show 404
   if (!slug || !validSlugs.includes(slug)) {
@@ -354,12 +355,14 @@ const CategoryPage = ({ slug }: { slug: string }) => {
                   filterGroups={categoryFilters[slug || ""] || []}
                   activeFilters={activeFilters}
                   onApplyFilters={(f) => { setActiveFilters(f); setPage(0); }}
+                  onLocationCoords={(lat, lng) => setMapCenter([lat, lng])}
                 />
               ) : (
                 <CategoryFilters
                   filterGroups={categoryFilters[slug || ""] || []}
                   activeFilters={activeFilters}
                   onApplyFilters={(f) => { setActiveFilters(f); setPage(0); }}
+                  onLocationCoords={(lat, lng) => setMapCenter([lat, lng])}
                 />
               )
             )}
@@ -420,6 +423,7 @@ const CategoryPage = ({ slug }: { slug: string }) => {
                   <ListingsMap
                     listings={filteredListings.filter((l: any) => l.latitude && l.longitude)}
                     hoveredId={hoveredListingId}
+                    center={mapCenter}
                   />
                 </Suspense>
               </div>

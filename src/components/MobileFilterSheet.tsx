@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { usePlacesAutocomplete } from "@/hooks/usePlacesAutocomplete";
+import { usePlacesAutocomplete, loadGoogleMaps } from "@/hooks/usePlacesAutocomplete";
 import { ChevronLeft, ChevronRight, SlidersHorizontal, X, Minus, Plus, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -12,6 +12,7 @@ interface MobileFilterSheetProps {
   filterGroups: FilterGroup[];
   activeFilters: Record<string, string[]>;
   onApplyFilters: (filters: Record<string, string[]>) => void;
+  onLocationCoords?: (lat: number, lng: number) => void;
 }
 
 // Helper to parse stored values
@@ -38,13 +39,15 @@ const getLocationValue = (values: string[]): string => {
 
 const DAYS = ["Δ", "Τ", "Τ", "Π", "Π", "Σ", "Κ"];
 
-const MobileFilterSheet = ({ filterGroups, activeFilters, onApplyFilters }: MobileFilterSheetProps) => {
+const MobileFilterSheet = ({ filterGroups, activeFilters, onApplyFilters, onLocationCoords }: MobileFilterSheetProps) => {
   const [open, setOpen] = useState(false);
   const [activeGroup, setActiveGroup] = useState<string | null>(null);
   const [tempFilters, setTempFilters] = useState<Record<string, string[]>>({});
 
   // Places autocomplete for location filter
-  const { query: locationQuery, predictions: locationPredictions, isOpen: locationDropdownOpen, search: locationSearch, select: locationSelect, close: locationClose, setQuery: setLocationQuery } = usePlacesAutocomplete();
+  const { query: locationQuery, predictions: locationPredictions, isOpen: locationDropdownOpen, search: locationSearch, select: locationSelect, close: locationClose, setQuery: setLocationQuery, getPlaceDetails } = usePlacesAutocomplete();
+
+  useEffect(() => { loadGoogleMaps(); }, []);
   // Date picker state
   const [calendarMonth, setCalendarMonth] = useState(new Date());
 
@@ -233,9 +236,13 @@ const MobileFilterSheet = ({ filterGroups, activeFilters, onApplyFilters }: Mobi
                 <button
                   key={p.place_id}
                   type="button"
-                  onClick={() => {
+                  onClick={async () => {
                     locationSelect(p);
                     handleLocationChange(activeGroup, p.description);
+                    const details = await getPlaceDetails(p.place_id);
+                    if (details?.lat && details?.lng && onLocationCoords) {
+                      onLocationCoords(details.lat, details.lng);
+                    }
                   }}
                   className="w-full text-left px-4 py-3 text-sm text-foreground hover:bg-accent transition-colors flex items-center gap-3 border-b border-border last:border-b-0"
                 >

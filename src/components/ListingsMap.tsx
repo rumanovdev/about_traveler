@@ -155,6 +155,12 @@ const ListingsMap = ({ listings, hoveredId, center }: ListingsMapProps) => {
     }
   }, [listings, mapReady]);
 
+  // Pan map when center prop changes (location search)
+  useEffect(() => {
+    if (!mapInstanceRef.current || !center) return;
+    mapInstanceRef.current.flyTo(center, 12, { animate: true, duration: 1.2 });
+  }, [center]);
+
   // Update markers appearance on hover
   useEffect(() => {
     markersRef.current.forEach((marker, id) => {

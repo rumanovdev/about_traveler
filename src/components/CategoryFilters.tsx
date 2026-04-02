@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ChevronRight, X, Minus, Plus, ChevronLeft, ChevronDown, MapPin, Calendar as CalendarIcon } from "lucide-react";
-import { usePlacesAutocomplete } from "@/hooks/usePlacesAutocomplete";
+import { usePlacesAutocomplete, loadGoogleMaps } from "@/hooks/usePlacesAutocomplete";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
@@ -32,6 +32,7 @@ interface CategoryFiltersProps {
   filterGroups: FilterGroup[];
   activeFilters: Record<string, string[]>;
   onApplyFilters: (filters: Record<string, string[]>) => void;
+  onLocationCoords?: (lat: number, lng: number) => void;
 }
 
 // Helper to parse stored values
@@ -58,7 +59,7 @@ const getLocationValue = (values: string[]): string => {
 
 const DAYS = ["Δ", "Τ", "Τ", "Π", "Π", "Σ", "Κ"];
 
-const CategoryFilters = ({ filterGroups, activeFilters, onApplyFilters }: CategoryFiltersProps) => {
+const CategoryFilters = ({ filterGroups, activeFilters, onApplyFilters, onLocationCoords }: CategoryFiltersProps) => {
   const [openFilter, setOpenFilter] = useState<string | null>(null);
   const [tempSelected, setTempSelected] = useState<string[]>([]);
 
@@ -66,7 +67,9 @@ const CategoryFilters = ({ filterGroups, activeFilters, onApplyFilters }: Catego
   const [calendarMonth, setCalendarMonth] = useState(new Date());
 
   // Places autocomplete for location filter
-  const { query: locationQuery, predictions: locationPredictions, isOpen: locationDropdownOpen, search: locationSearch, select: locationSelect, close: locationClose, setQuery: setLocationQuery } = usePlacesAutocomplete();
+  const { query: locationQuery, predictions: locationPredictions, isOpen: locationDropdownOpen, search: locationSearch, select: locationSelect, close: locationClose, setQuery: setLocationQuery, getPlaceDetails } = usePlacesAutocomplete();
+
+  useEffect(() => { loadGoogleMaps(); }, []);
 
   const openGroup = filterGroups.find((g) => g.key === openFilter);
 
@@ -263,9 +266,13 @@ const CategoryFilters = ({ filterGroups, activeFilters, onApplyFilters }: Catego
                 <button
                   key={p.place_id}
                   type="button"
-                  onClick={() => {
+                  onClick={async () => {
                     locationSelect(p);
                     handleLocationChange(p.description);
+                    const details = await getPlaceDetails(p.place_id);
+                    if (details?.lat && details?.lng && onLocationCoords) {
+                      onLocationCoords(details.lat, details.lng);
+                    }
                   }}
                   className="w-full text-left px-4 py-3 text-sm text-foreground hover:bg-accent transition-colors flex items-center gap-3 border-b border-border last:border-b-0"
                 >
