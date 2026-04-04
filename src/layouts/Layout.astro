@@ -10,10 +10,12 @@ interface Props {
   jsonLd?: object | object[];
   noindex?: boolean;
   preloadImage?: string;
+  /** When set with preloadImage, mobile viewers preload the smaller asset (matches HeroSection picture breakpoints). */
+  preloadImageMobile?: string;
   bodyBg?: string;
 }
 
-const { title, description, path, image, type = "website", jsonLd, noindex, preloadImage, bodyBg } = Astro.props;
+const { title, description, path, image, type = "website", jsonLd, noindex, preloadImage, preloadImageMobile, bodyBg } = Astro.props;
 const siteUrl = "https://aboutraveller.com";
 const fullUrl = `${siteUrl}${path}`;
 const fullTitle = title.includes("About Traveller") ? title : `${title} | About Traveller`;
@@ -42,9 +44,18 @@ const fullTitle = title.includes("About Traveller") ? title : `${title} | About 
     <link rel="icon" href="/newfavicon.png?v=2" type="image/png" />
     <link rel="apple-touch-icon" href="/newfavicon.png?v=2" />
 
-    <!-- Preload LCP image (passed per page) -->
+    <!-- Preload LCP image (responsive when preloadImageMobile is set) -->
+    {preloadImageMobile && (
+      <link rel="preload" as="image" href={preloadImageMobile} fetchpriority="high" media="(max-width: 768px)" />
+    )}
     {preloadImage && (
-      <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />
+      <link
+        rel="preload"
+        as="image"
+        href={preloadImage}
+        fetchpriority="high"
+        media={preloadImageMobile ? "(min-width: 769px)" : undefined}
+      />
     )}
 
     <!-- Resource hints -->

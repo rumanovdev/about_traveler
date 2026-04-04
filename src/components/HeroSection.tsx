@@ -72,7 +72,17 @@ const HeroSection = () => {
         <picture>
           <source media="(max-width: 768px)" srcSet={heroBgMobileWebp} type="image/webp" />
           <source srcSet={heroBgWebp} type="image/webp" />
-          <img src={heroBgJpg} alt="Cappadocia hot air balloons" className="w-full h-full object-cover" loading="eager" fetchPriority="high" width={1920} height={1080} />
+          <img
+            src={heroBgJpg}
+            alt="Cappadocia hot air balloons"
+            className="w-full h-full object-cover"
+            loading="eager"
+            fetchPriority="high"
+            decoding="sync"
+            sizes="100vw"
+            width={1920}
+            height={1080}
+          />
         </picture>
         <div className="absolute inset-0 bg-gradient-to-b from-foreground/50 via-foreground/30 to-foreground/70" />
       </div>
