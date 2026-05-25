@@ -1,7 +1,7 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 
 import { useLanguage } from "@/hooks/useLanguage";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import ListingCard from "@/components/ListingCard";
@@ -20,6 +20,7 @@ import ListingFormDialog from "@/components/dashboard/ListingFormDialog";
 import { getMyListings, getMyAnalytics, getMySubscription } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { toast } from "sonner";
 
 const PartnerFavorites = ({ userId, lang }: { userId: string; lang: string }) => {
   const { data: favorites = [], isLoading } = useQuery({
@@ -74,6 +75,7 @@ const PartnerFavorites = ({ userId, lang }: { userId: string; lang: string }) =>
 
 const PartnerDashboard = () => {
   const { user, hasRole, loading } = useAuth();
+  const queryClient = useQueryClient();
   const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
   const [formOpen, setFormOpen] = useState(false);
   const [editingListing, setEditingListing] = useState<any>(null);
@@ -87,6 +89,26 @@ const PartnerDashboard = () => {
       window.location.href = "/my-account";
     }
   }, [user, loading, hasRole]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !user) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const checkout = params.get("checkout");
+    if (!checkout) return;
+
+    if (checkout === "success") {
+      toast.success(lang === "el" ? "Η συνδρομή ενεργοποιήθηκε!" : "Subscription activated!");
+      queryClient.invalidateQueries({ queryKey: ["my-subscription", user.id] });
+    } else if (checkout === "cancelled") {
+      toast.info(lang === "el" ? "Η πληρωμή ακυρώθηκε" : "Payment cancelled");
+    }
+
+    params.delete("checkout");
+    const query = params.toString();
+    const nextUrl = query ? `${window.location.pathname}?${query}` : window.location.pathname;
+    window.history.replaceState({}, "", nextUrl);
+  }, [user, lang, queryClient]);
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -155,7 +177,14 @@ const PartnerDashboard = () => {
       case "listings":
         return <DashboardListings listings={listings} loading={listingsLoading} onEdit={handleEdit} subscription={subscription} />;
       case "subscription":
-        return <DashboardSubscription subscription={subscription} />;
+        return (
+          <DashboardSubscription
+            subscription={subscription}
+            onSubscriptionChange={() =>
+              queryClient.invalidateQueries({ queryKey: ["my-subscription", user?.id] })
+            }
+          />
+        );
       case "invoices":
         return <DashboardInvoices />;
       case "messages":

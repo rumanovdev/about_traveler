@@ -73,7 +73,7 @@ Deno.serve(async (req) => {
     // Update subscription status to cancelled
     const { error: updateError } = await adminClient
       .from("subscriptions")
-      .update({ status: "cancelled", updated_at: new Date().toISOString() })
+      .update({ status: "canceled", updated_at: new Date().toISOString() })
       .eq("id", sub.id);
 
     if (updateError) {

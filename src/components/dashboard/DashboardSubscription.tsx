@@ -16,6 +16,7 @@ const DashboardSubscription = ({ subscription, onSubscriptionChange }: Dashboard
   const isPastDue = subscription?.status === "past_due";
   const { lang } = useLanguage();
   const [cancelling, setCancelling] = useState(false);
+  const [activating, setActivating] = useState(false);
 
   const features = lang === "el"
     ? ["Απεριόριστες καταχωρίσεις", "Στατιστικά προβολών & κλικ", "Εμφάνιση στην αναζήτηση", "Υποστήριξη μέσω email"]
@@ -33,16 +34,13 @@ const DashboardSubscription = ({ subscription, onSubscriptionChange }: Dashboard
       const token = sessionData?.session?.access_token;
       if (!token) throw new Error("Not authenticated");
 
-      const res = await fetch(
-        `${import.meta.env.PUBLIC_SUPABASE_URL}/functions/v1/cancel-subscription`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await fetch("/api/cancel-subscription", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       const result = await res.json();
       if (!res.ok) throw new Error(result.error || "Failed to cancel");
@@ -53,6 +51,31 @@ const DashboardSubscription = ({ subscription, onSubscriptionChange }: Dashboard
       toast.error(e.message);
     } finally {
       setCancelling(false);
+    }
+  };
+
+  const handleActivate = async () => {
+    setActivating(true);
+    try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData?.session?.access_token;
+      if (!token) throw new Error("Not authenticated");
+
+      const res = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || "Failed to create checkout session");
+
+      window.location.href = result.url;
+    } catch (e: any) {
+      toast.error(e.message);
+      setActivating(false);
     }
   };
 
@@ -115,8 +138,14 @@ const DashboardSubscription = ({ subscription, onSubscriptionChange }: Dashboard
                   </Button>
                 </>
               ) : (
-                <Button className="bg-gradient-sky text-primary-foreground">
-                  {lang === "el" ? "Ενεργοποίηση Συνδρομής" : "Activate Subscription"}
+                <Button
+                  className="bg-gradient-sky text-primary-foreground"
+                  onClick={handleActivate}
+                  disabled={activating}
+                >
+                  {activating
+                    ? (lang === "el" ? "Μετάβαση στο Stripe..." : "Redirecting to Stripe...")
+                    : (lang === "el" ? "Ενεργοποίηση Συνδρομής" : "Activate Subscription")}
                 </Button>
               )}
             </div>
