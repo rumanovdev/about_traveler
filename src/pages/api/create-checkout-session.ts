@@ -32,7 +32,13 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const adminClient = getSupabaseAdmin();
-    const priceId = import.meta.env.STRIPE_PRICE_ID || DEFAULT_STRIPE_PRICE_ID;
+    const priceId = import.meta.env.STRIPE_PRICE_ID;
+    if (!priceId) {
+      return new Response(JSON.stringify({ error: "STRIPE_PRICE_ID not configured" }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
 
     const { data: existingSub } = await adminClient
       .from("subscriptions")
@@ -85,7 +91,8 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (!sessionRes.ok) {
       console.error("Stripe checkout session failed:", session);
-      return new Response(JSON.stringify({ error: "Failed to create checkout session" }), {
+      const detail = session?.error?.message || "Unknown Stripe error";
+      return new Response(JSON.stringify({ error: `Checkout failed: ${detail}` }), {
         status: 500,
         headers: { "Content-Type": "application/json" },
       });
