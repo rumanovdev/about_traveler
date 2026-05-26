@@ -14,28 +14,50 @@ const VerifyEmailPage = () => {
 
   useEffect(() => {
     const hash = window.location.hash;
+    const params = new URLSearchParams(window.location.search);
 
-    // Supabase appends #access_token=...&type=signup (or type=magiclink)
-    if (hash.includes("type=signup") || hash.includes("type=magiclink")) {
+    // Supabase PKCE flow: hash with access_token or type=signup
+    if (hash.includes("type=signup") || hash.includes("type=magiclink") || hash.includes("access_token")) {
       setStatus("success");
       return;
     }
 
-    // Also listen for auth state change
+    // Supabase PKCE flow: code in query params
+    if (params.get("code")) {
+      supabase.auth.exchangeCodeForSession(params.get("code")!).then(({ error }) => {
+        setStatus(error ? "error" : "success");
+      });
+      return;
+    }
+
+    // Check if user is already authenticated (verification already processed by Supabase)
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user?.email_confirmed_at) {
+        setStatus("success");
+        return true;
+      }
+      return false;
+    };
+
+    // Listen for auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === "SIGNED_IN" || event === "USER_UPDATED") {
         setStatus("success");
       }
     });
 
-    // If no hash token found after a short delay, mark as error
-    const timeout = setTimeout(() => {
-      setStatus((prev) => (prev === "loading" ? "error" : prev));
-    }, 3000);
+    // Check session, then set timeout for error only if not authenticated
+    checkSession().then((authenticated) => {
+      if (!authenticated) {
+        setTimeout(() => {
+          setStatus((prev) => (prev === "loading" ? "error" : prev));
+        }, 4000);
+      }
+    });
 
     return () => {
       subscription.unsubscribe();
-      clearTimeout(timeout);
     };
   }, []);
 
@@ -74,8 +96,8 @@ const VerifyEmailPage = () => {
                     ? "Ο λογαριασμός σας είναι έτοιμος."
                     : "Your account is ready."}
                 </p>
-                <Button onClick={() => (window.location.href = "/auth")} className="w-full">
-                  {lang === "el" ? "Σύνδεση" : "Sign in"}
+                <Button onClick={() => (window.location.href = "/dashboard")} className="w-full">
+                  {lang === "el" ? "Συνέχεια" : "Continue"}
                 </Button>
               </>
             )}
