@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, MailCheck } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import GoogleLoginButton from "@/components/GoogleLoginButton";
 import { useAuth } from "@/hooks/useAuth";
@@ -22,6 +22,7 @@ const PartnerRegisterPage = () => {
   const [policyAccepted, setPolicyAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [registered, setRegistered] = useState(false);
   const [googleProcessing, setGoogleProcessing] = useState(false);
   const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
   const { lang } = useLanguage();
@@ -118,8 +119,7 @@ const PartnerRegisterPage = () => {
         }).eq("user_id", data.user.id);
       }
 
-      toast.success(lang === "el" ? "Εγγραφή επιτυχής!" : "Registration successful!");
-      window.location.href = "/auth";
+      setRegistered(true);
     } catch (error: any) {
       toast.error(error.message || (lang === "el" ? "Κάτι πήγε στραβά" : "Something went wrong"));
     } finally {
@@ -154,6 +154,31 @@ const PartnerRegisterPage = () => {
           <div className="flex justify-center">
             {/* Registration form */}
             <div className="w-full max-w-md bg-card rounded-2xl shadow-travel-lg border border-border p-7">
+              {registered ? (
+                <div className="text-center py-6">
+                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-5">
+                    <MailCheck size={32} className="text-primary" />
+                  </div>
+                  <h2 className="text-xl font-display font-bold text-foreground mb-3">
+                    {lang === "el" ? "Ελέγξτε το email σας" : "Check your email"}
+                  </h2>
+                  <p className="text-muted-foreground mb-2">
+                    {lang === "el"
+                      ? "Σας στείλαμε έναν σύνδεσμο επιβεβαίωσης στο"
+                      : "We sent a confirmation link to"}
+                  </p>
+                  <p className="font-medium text-foreground mb-6">{email}</p>
+                  <p className="text-sm text-muted-foreground mb-6">
+                    {lang === "el"
+                      ? "Πατήστε τον σύνδεσμο στο email για να ενεργοποιήσετε τον λογαριασμό σας. Ελέγξτε και τον φάκελο spam."
+                      : "Click the link in the email to activate your account. Check your spam folder too."}
+                  </p>
+                  <Button variant="outline" onClick={() => (window.location.href = "/auth")} className="w-full">
+                    {lang === "el" ? "Πίσω στη σύνδεση" : "Back to sign in"}
+                  </Button>
+                </div>
+              ) : (
+              <>
               <h2 className="text-lg font-bold text-foreground mb-5">
                 {lang === "el" ? "Στοιχεία Εγγραφής" : "Registration Details"}
               </h2>
@@ -163,54 +188,62 @@ const PartnerRegisterPage = () => {
                 <span className="text-xs text-muted-foreground">{lang === "el" ? "ή με email" : "or with email"}</span>
                 <div className="flex-1 border-t border-border" />
               </div>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4" autoComplete="off">
                 <div>
-                  <Label htmlFor="businessName">
+                  <Label htmlFor="reg-businessName">
                     {lang === "el" ? "Επωνυμία Επιχείρησης" : "Business Name"}
                   </Label>
                   <Input
-                    id="businessName"
+                    id="reg-businessName"
+                    name="reg-businessName"
                     type="text"
                     value={businessName}
                     onChange={(e) => setBusinessName(e.target.value)}
                     placeholder={lang === "el" ? "Η επιχείρησή σας" : "Your business"}
                     required
+                    autoComplete="off"
                     className="mt-1.5"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="reg-email">Email</Label>
                   <Input
-                    id="email"
+                    id="reg-email"
+                    name="reg-email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="business@example.com"
                     required
+                    autoComplete="off"
                     className="mt-1.5"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="phone">
+                  <Label htmlFor="reg-phone">
                     {lang === "el" ? "Τηλέφωνο" : "Phone"}
                   </Label>
                   <Input
-                    id="phone"
+                    id="reg-phone"
+                    name="reg-phone"
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="+30 210 1234567"
+                    autoComplete="off"
                     className="mt-1.5"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="password">
+                  <Label htmlFor="reg-password">
                     {lang === "el" ? "Κωδικός" : "Password"}
                   </Label>
                   <div className="relative mt-1.5">
                     <Input
-                      id="password"
+                      id="reg-password"
+                      name="reg-password"
                       type={showPassword ? "text" : "password"}
+                      autoComplete="new-password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
@@ -247,6 +280,8 @@ const PartnerRegisterPage = () => {
                     : (lang === "el" ? "Εγγραφή ως Επιχείρηση" : "Register as Business")}
                 </Button>
               </form>
+              </>
+              )}
             </div>
           </div>
         </div>

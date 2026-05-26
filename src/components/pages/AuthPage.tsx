@@ -8,7 +8,7 @@ import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { X, UserRound, Store, Eye, EyeOff } from "lucide-react";
+import { X, UserRound, Store, Eye, EyeOff, MailCheck } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import GoogleLoginButton from "@/components/GoogleLoginButton";
 
@@ -22,6 +22,7 @@ const AuthPage = () => {
   const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [registered, setRegistered] = useState(false);
   const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
   const { lang } = useLanguage();
   const redirectParam = searchParams.get("redirect");
@@ -47,7 +48,7 @@ const AuthPage = () => {
           },
         });
         if (error) throw error;
-        toast.success(lang === "el" ? "Ελέγξτε το email σας για επιβεβαίωση!" : "Check your email for confirmation!");
+        setRegistered(true);
       }
     } catch (error: any) {
       toast.error(error.message || (lang === "el" ? "Κάτι πήγε στραβά" : "Something went wrong"));
@@ -125,8 +126,34 @@ const AuthPage = () => {
               </button>
             </div>
 
+            {/* Registration success */}
+            {registered && (
+              <div className="px-6 py-8 text-center">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-5">
+                  <MailCheck size={32} className="text-primary" />
+                </div>
+                <h2 className="text-xl font-display font-bold text-foreground mb-3">
+                  {lang === "el" ? "Ελέγξτε το email σας" : "Check your email"}
+                </h2>
+                <p className="text-muted-foreground mb-2">
+                  {lang === "el"
+                    ? "Σας στείλαμε έναν σύνδεσμο επιβεβαίωσης στο"
+                    : "We sent a confirmation link to"}
+                </p>
+                <p className="font-medium text-foreground mb-6">{email}</p>
+                <p className="text-sm text-muted-foreground mb-6">
+                  {lang === "el"
+                    ? "Πατήστε τον σύνδεσμο στο email για να ενεργοποιήσετε τον λογαριασμό σας. Ελέγξτε και τον φάκελο spam."
+                    : "Click the link in the email to activate your account. Check your spam folder too."}
+                </p>
+                <Button variant="outline" onClick={() => { setRegistered(false); setActiveTab("login"); resetForm(); }} className="w-full">
+                  {lang === "el" ? "Πίσω στη σύνδεση" : "Back to sign in"}
+                </Button>
+              </div>
+            )}
+
             {/* Register type selection */}
-            {activeTab === "register" && !registerType && (
+            {!registered && activeTab === "register" && !registerType && (
               <div className="px-6 py-8">
                 <div className="grid grid-cols-2 gap-4">
                   <button
@@ -154,7 +181,7 @@ const AuthPage = () => {
             )}
 
             {/* Login form OR customer register form */}
-            {(activeTab === "login" || (activeTab === "register" && registerType === "customer")) && (
+            {!registered && (activeTab === "login" || (activeTab === "register" && registerType === "customer")) && (
               <>
                 {/* Google Login */}
                 <div className="px-6 pt-4">
