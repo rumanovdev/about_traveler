@@ -316,7 +316,7 @@ export async function deleteUser(userId: string) {
   if (!token) throw new Error("Not authenticated");
 
   const res = await fetch(
-    `${import.meta.env.PUBLIC_SUPABASE_URL}/functions/v1/delete-user`,
+    `/api/delete-user`,
     {
       method: "POST",
       headers: {
