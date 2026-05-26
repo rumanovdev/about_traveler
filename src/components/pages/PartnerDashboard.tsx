@@ -100,6 +100,9 @@ const PartnerDashboard = () => {
     if (checkout === "success") {
       toast.success(lang === "el" ? "Η συνδρομή ενεργοποιήθηκε!" : "Subscription activated!");
       queryClient.invalidateQueries({ queryKey: ["my-subscription", user.id] });
+      setActiveTab("listings");
+      setEditingListing(null);
+      setFormOpen(true);
     } else if (checkout === "cancelled") {
       toast.info(lang === "el" ? "Η πληρωμή ακυρώθηκε" : "Payment cancelled");
     }
