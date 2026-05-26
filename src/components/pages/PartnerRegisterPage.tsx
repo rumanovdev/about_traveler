@@ -173,6 +173,26 @@ const PartnerRegisterPage = () => {
                       ? "Πατήστε τον σύνδεσμο στο email για να ενεργοποιήσετε τον λογαριασμό σας. Ελέγξτε και τον φάκελο spam."
                       : "Click the link in the email to activate your account. Check your spam folder too."}
                   </p>
+                  <Button
+                    className="w-full mb-3"
+                    disabled={loading}
+                    onClick={async () => {
+                      setLoading(true);
+                      try {
+                        const { error } = await supabase.auth.resend({ type: "signup", email, options: { emailRedirectTo: `${window.location.origin}/verify` } });
+                        if (error) throw error;
+                        toast.success(lang === "el" ? "Ο σύνδεσμος στάλθηκε ξανά!" : "Link resent!");
+                      } catch (err: any) {
+                        toast.error(err.message || (lang === "el" ? "Κάτι πήγε στραβά" : "Something went wrong"));
+                      } finally {
+                        setLoading(false);
+                      }
+                    }}
+                  >
+                    {loading
+                      ? (lang === "el" ? "Αποστολή..." : "Sending...")
+                      : (lang === "el" ? "Αποστολή ξανά" : "Resend link")}
+                  </Button>
                   <Button variant="outline" onClick={() => (window.location.href = "/auth")} className="w-full">
                     {lang === "el" ? "Πίσω στη σύνδεση" : "Back to sign in"}
                   </Button>
