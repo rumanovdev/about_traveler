@@ -33,6 +33,7 @@ const pages: Record<string, React.LazyExoticComponent<any>> = {
   PartnerRegisterPage: lazy(() => import("@/components/pages/PartnerRegisterPage")),
   ForgotPasswordPage: lazy(() => import("@/components/pages/ForgotPasswordPage")),
   ResetPasswordPage: lazy(() => import("@/components/pages/ResetPasswordPage")),
+  VerifyEmailPage: lazy(() => import("@/components/pages/VerifyEmailPage")),
   PrivacyPolicyPage: lazy(() => import("@/components/pages/PrivacyPolicyPage")),
   HowItWorksPage: lazy(() => import("@/components/pages/HowItWorksPage")),
   CookiePolicyPage: lazy(() => import("@/components/pages/CookiePolicyPage")),

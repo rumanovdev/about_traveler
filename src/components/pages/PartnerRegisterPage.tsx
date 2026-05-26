@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import GoogleLoginButton from "@/components/GoogleLoginButton";
 import { useAuth } from "@/hooks/useAuth";
@@ -21,6 +21,7 @@ const PartnerRegisterPage = () => {
   const [phone, setPhone] = useState("");
   const [policyAccepted, setPolicyAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [googleProcessing, setGoogleProcessing] = useState(false);
   const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
   const { lang } = useLanguage();
@@ -95,7 +96,7 @@ const PartnerRegisterPage = () => {
         email,
         password,
         options: {
-          emailRedirectTo: window.location.origin,
+          emailRedirectTo: `${window.location.origin}/verify`,
           data: {
             display_name: businessName,
             phone,
@@ -206,16 +207,25 @@ const PartnerRegisterPage = () => {
                   <Label htmlFor="password">
                     {lang === "el" ? "Κωδικός" : "Password"}
                   </Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    required
-                    minLength={6}
-                    className="mt-1.5"
-                  />
+                  <div className="relative mt-1.5">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      required
+                      minLength={6}
+                      className="pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
                 </div>
 
                 <div className="flex items-start gap-2">

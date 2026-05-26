@@ -8,7 +8,7 @@ import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { X, UserRound, Store } from "lucide-react";
+import { X, UserRound, Store, Eye, EyeOff } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import GoogleLoginButton from "@/components/GoogleLoginButton";
 
@@ -21,6 +21,7 @@ const AuthPage = () => {
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
   const { lang } = useLanguage();
   const redirectParam = searchParams.get("redirect");
@@ -41,7 +42,7 @@ const AuthPage = () => {
           email,
           password,
           options: {
-            emailRedirectTo: window.location.origin,
+            emailRedirectTo: `${window.location.origin}/verify`,
             data: { display_name: displayName },
           },
         });
@@ -201,16 +202,25 @@ const AuthPage = () => {
                     <Label htmlFor="password" className="text-sm font-medium text-foreground">
                       {lang === "el" ? "Κωδικός" : "Password"}
                     </Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      required
-                      minLength={6}
-                      className="mt-1.5"
-                    />
+                    <div className="relative mt-1.5">
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="••••••••"
+                        required
+                        minLength={6}
+                        className="pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      </button>
+                    </div>
                   </div>
 
                   {activeTab === "login" && (
