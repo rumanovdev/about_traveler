@@ -80,9 +80,6 @@ const ContactForm = ({ listingId, businessName }: ContactFormProps) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h3 className="text-lg font-display font-semibold text-foreground">
-        {lang === "el" ? "Στείλτε μήνυμα" : "Send a message"}
-      </h3>
       <div>
         <Input
           placeholder={lang === "el" ? "Το όνομά σας" : "Your name"}

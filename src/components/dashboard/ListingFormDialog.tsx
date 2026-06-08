@@ -40,18 +40,14 @@ import { usePlacesAutocomplete, loadGoogleMaps } from "@/hooks/usePlacesAutocomp
 
 const AMENITIES_BY_CATEGORY: Record<string, { value: string; labelEl: string; icon: string }[]> = {
   diamonh: [
-    { value: "wifi", labelEl: "WiFi", icon: "📶" },
-    { value: "pool", labelEl: "Πισίνα", icon: "🏊" },
-    { value: "parking", labelEl: "Parking", icon: "🅿️" },
     { value: "ac", labelEl: "A/C", icon: "❄️" },
-    { value: "kitchen", labelEl: "Κουζίνα", icon: "🍳" },
-    { value: "breakfast", labelEl: "Πρωινό", icon: "☕" },
-    { value: "sea-view", labelEl: "Θέα θάλασσα", icon: "🌊" },
-    { value: "balcony", labelEl: "Μπαλκόνι", icon: "🏠" },
-    { value: "pets", labelEl: "Κατοικίδια OK", icon: "🐾" },
-    { value: "jacuzzi", labelEl: "Jacuzzi", icon: "🛁" },
-    { value: "gym", labelEl: "Γυμναστήριο", icon: "💪" },
-    { value: "bbq", labelEl: "BBQ", icon: "🔥" },
+    { value: "wifi", labelEl: "WiFi", icon: "📶" },
+    { value: "airport-pickup", labelEl: "Airport pickup", icon: "✈️" },
+    { value: "port-pickup", labelEl: "Port pickup", icon: "⚓" },
+    { value: "child-seat", labelEl: "Παιδικό κάθισμα", icon: "👶" },
+    { value: "24h-service", labelEl: "24ωρη εξυπηρέτηση", icon: "🕐" },
+    { value: "luggage", labelEl: "Χώρος αποσκευών", icon: "🧳" },
+    { value: "pets", labelEl: "Pet friendly", icon: "🐾" },
   ],
   restaurants: [
     { value: "wifi", labelEl: "WiFi", icon: "📶" },
@@ -119,12 +115,11 @@ const typeOptionsByCategory: Record<string, { value: string; labelEl: string; la
     { value: "bakery", labelEl: "Φούρνος", labelEn: "Bakery" },
   ],
   diamonh: [
-    { value: "hotel", labelEl: "Ξενοδοχείο", labelEn: "Hotel" },
-    { value: "villa", labelEl: "Βίλα", labelEn: "Villa" },
-    { value: "apartment", labelEl: "Διαμέρισμα", labelEn: "Apartment" },
-    { value: "studio", labelEl: "Στούντιο", labelEn: "Studio" },
-    { value: "rooms", labelEl: "Δωμάτια", labelEn: "Rooms" },
-    { value: "guesthouse", labelEl: "Ξενώνας", labelEn: "Guesthouse" },
+    { value: "taxi", labelEl: "Taxi", labelEn: "Taxi" },
+    { value: "transfer", labelEl: "Transfer", labelEn: "Transfer" },
+    { value: "vip-transfer", labelEl: "VIP Transfer", labelEn: "VIP Transfer" },
+    { value: "airport-transfer", labelEl: "Airport Transfer", labelEn: "Airport Transfer" },
+    { value: "port-transfer", labelEl: "Port Transfer", labelEn: "Port Transfer" },
   ],
   activities: [
     { value: "scuba-diving", labelEl: "Scuba Diving", labelEn: "Scuba Diving" },
@@ -174,12 +169,10 @@ const recommendedOptionsByCategory: Record<string, { value: string; labelEl: str
     { value: "live-music", labelEl: "Live μουσική", labelEn: "Live music" },
   ],
   diamonh: [
-    { value: "family", labelEl: "Οικογένεια", labelEn: "Family" },
-    { value: "couples", labelEl: "Ζευγάρια", labelEn: "Couples" },
-    { value: "luxury", labelEl: "Πολυτέλεια", labelEn: "Luxury" },
-    { value: "budget", labelEl: "Οικονομικό", labelEn: "Budget" },
-    { value: "sea-view", labelEl: "Θέα θάλασσα", labelEn: "Sea view" },
-    { value: "pool", labelEl: "Πισίνα", labelEn: "Pool" },
+    { value: "airport", labelEl: "Αεροδρόμιο", labelEn: "Airport" },
+    { value: "port", labelEl: "Λιμάνι", labelEn: "Port" },
+    { value: "long-distance", labelEl: "Υπεραστικά", labelEn: "Long distance" },
+    { value: "group", labelEl: "Ομαδικά", labelEn: "Group" },
   ],
   activities: [
     { value: "family", labelEl: "Οικογένεια", labelEn: "Family" },
@@ -498,7 +491,8 @@ const ListingFormDialog = ({ open, onOpenChange, listing, userId }: ListingFormD
                   .filter((cat) => cat.slug !== "moto-rental")
                   .map((cat) => {
                     const isCar = cat.slug === "car-rental";
-                    const label = isCar ? "Rent a Car" : cat.title;
+                    const isTaxi = cat.slug === "diamonh";
+                    const label = isCar ? "Rent a Car" : isTaxi ? "Taxi / Transfer" : cat.title;
                     return (
                       <SelectItem key={cat.id} value={cat.id}>
                         {label}
@@ -548,19 +542,9 @@ const ListingFormDialog = ({ open, onOpenChange, listing, userId }: ListingFormD
 
           {/* Detail fields - conditional by category */}
           {selectedCategorySlug === "diamonh" && (
-            <div className="grid grid-cols-3 gap-3">
-              <div>
-                <Label htmlFor="rooms">{t.lfRooms}</Label>
-                <Input id="rooms" type="number" min="0" value={rooms} onChange={(e) => setRooms(e.target.value)} placeholder="3" />
-              </div>
-              <div>
-                <Label htmlFor="beds">{t.lfBeds}</Label>
-                <Input id="beds" type="number" min="0" value={beds} onChange={(e) => setBeds(e.target.value)} placeholder="4" />
-              </div>
-              <div>
-                <Label htmlFor="capacity">{t.lfPersons}</Label>
-                <Input id="capacity" type="number" min="0" value={capacity} onChange={(e) => setCapacity(e.target.value)} placeholder="6" />
-              </div>
+            <div>
+              <Label htmlFor="capacity">{lang === "el" ? "Χωρητικότητα (επιβάτες)" : "Capacity (passengers)"}</Label>
+              <Input id="capacity" type="number" min="0" value={capacity} onChange={(e) => setCapacity(e.target.value)} placeholder="4" />
             </div>
           )}
 
