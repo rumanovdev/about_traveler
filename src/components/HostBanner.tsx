@@ -11,8 +11,8 @@ const HostBanner = () => {
         {/* Welcome text */}
         <p className="text-center text-lg md:text-xl lg:text-[1.28rem] text-foreground mb-8 max-w-4xl mx-auto">
           {lang === "el"
-            ? "Καλώς ήρθατε στην πρώτη Ελληνική booking εταιρεία, θέλοντας να έχετε την καλύτερη εμπειρία, σας προσφέρουμε 0% προμήθεια ανά κράτηση στο κατάλυμα ή την επιχείρησή σας."
-            : "Welcome to the first Greek booking company, wanting to have the best experience, we offer you 0% commissions per booking at your accommodation or business."}
+            ? "Καλώς ήρθατε στην πρώτη Ελληνική booking εταιρεία. Θέλοντας να έχετε την καλύτερη εμπειρία, σας βοηθάμε να βρείτε τις καλύτερες υπηρεσίες για το ταξίδι σας."
+            : "Welcome to the first Greek booking company. We help you find the best services for your trip."}
         </p>
       </div>
 
@@ -41,21 +41,18 @@ const HostBanner = () => {
         </div>
       </div>
 
-      {/* Zero commission subtitle */}
       <div className="container max-w-5xl mx-auto px-4">
         <p className="text-center text-lg md:text-xl text-foreground mt-8 max-w-4xl mx-auto">
           {lang === "el" ? (
             <>
-              Διαφημίστε το κατάλυμα ή την επιχείρησή σας και απολαύστε το πλεονέκτημα των{" "}
-              <span className="font-bold">μηδενικών προμηθειών</span>.{" "}
+              Διαφημίστε την επιχείρησή σας και προσεγγίστε χιλιάδες ταξιδιώτες.{" "}
               <a href="/business-model" className="text-primary font-semibold hover:text-muted-foreground transition-colors">
                 Μάθετε περισσότερα
               </a>
             </>
           ) : (
             <>
-              Advertise your accommodation or business and enjoy the benefit of{" "}
-              <span className="font-bold">zero commission charges</span>.{" "}
+              Advertise your business and reach thousands of travelers.{" "}
               <a href="/business-model" className="text-primary font-semibold hover:text-muted-foreground transition-colors">
                 Learn more
               </a>

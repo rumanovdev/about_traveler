@@ -23,18 +23,18 @@ const catActivities = "/assets/cat-activities.jpg";
 
 
 const categoryMeta: Record<string, { title: string; seoTitle: string; subtitle: string; description: string; image: string; fetchSlugs?: string }> = {
-  diamonh: {
-    title: "Διαμονή",
-    seoTitle: "Διαμονή στην Ελλάδα | Ξενοδοχεία & Καταλύματα",
-    subtitle: "Ξενοδοχεία, Βίλες & Διαμερίσματα",
-    description: "Βρείτε ξενοδοχεία, βίλες και καταλύματα σε όλη την Ελλάδα. Δείτε φωτογραφίες και στοιχεία επικοινωνίας για την ιδανική διαμονή στο ταξίδι σας.",
+  "taxi-transfer": {
+    title: "Taxi / Transfer",
+    seoTitle: "Taxi & Transfer Ελλάδα | Μεταφορές & Transfers",
+    subtitle: "Μεταφορές & Transfers",
+    description: "Βρείτε υπηρεσίες taxi και transfer σε όλη την Ελλάδα. Δείτε στοιχεία επικοινωνίας και κλείστε τη μεταφορά σας εύκολα.",
     image: catAccommodation,
   },
-  "car-moto": {
-    title: "Car & Moto",
-    seoTitle: "Car & Moto Rental Ελλάδα | Ενοικίαση Αυτοκινήτου & Μηχανής",
-    subtitle: "Αυτοκίνητα, Μηχανές & Σκούτερ",
-    description: "Ανακαλύψτε εταιρείες ενοικίασης αυτοκινήτων και μηχανών σε όλη την Ελλάδα. Δείτε υπηρεσίες και επικοινωνήστε απευθείας με τους συνεργάτες.",
+  "rent-a-car": {
+    title: "Rent a Car",
+    seoTitle: "Rent a Car Ελλάδα | Ενοικίαση Αυτοκινήτου",
+    subtitle: "Αυτοκίνητα για κάθε ανάγκη",
+    description: "Ανακαλύψτε εταιρείες ενοικίασης αυτοκινήτων σε όλη την Ελλάδα. Δείτε υπηρεσίες και επικοινωνήστε απευθείας με τους συνεργάτες.",
     image: catCarRental,
     fetchSlugs: "car-rental,moto-rental",
   },
@@ -55,7 +55,7 @@ const categoryMeta: Record<string, { title: string; seoTitle: string; subtitle: 
 };
 
 const categoryFilters: Record<string, FilterGroup[]> = {
-  diamonh: [
+  "taxi-transfer": [
     {
       key: "location",
       title: "Τοποθεσία",
@@ -63,82 +63,18 @@ const categoryFilters: Record<string, FilterGroup[]> = {
       options: [],
     },
     {
-      key: "dates",
-      title: "Ημερομηνίες",
-      type: "dates",
-      options: [],
-    },
-    {
-      key: "visitors",
-      title: "Επισκέπτες",
-      type: "counter",
-      options: [],
-      counterOptions: [
-        { key: "adults", label: "Ενήλικες" },
-        { key: "children", label: "Παιδιά" },
-        { key: "infants", label: "Βρέφη", note: "Τα βρέφη δεν προσμετρούνται στο συνολικό αριθμό των επισκεπτών." },
-      ],
-    },
-    {
-      key: "price",
-      title: "Εύρος τιμών",
-      type: "price-range",
-      options: [],
-    },
-    {
       key: "type",
-      title: "Κατηγορία",
+      title: "Είδος",
       options: [
-        { value: "hotel", label: "Ξενοδοχείο" },
-        { value: "villa", label: "Βίλα" },
-        { value: "apartment", label: "Διαμέρισμα" },
-        { value: "studio", label: "Στούντιο" },
-        { value: "rooms", label: "Δωμάτια" },
-        { value: "guesthouse", label: "Ξενώνας" },
-      ],
-    },
-    {
-      key: "amenities",
-      title: "Παροχές",
-      options: [
-        { value: "wifi", label: "WiFi" },
-        { value: "coffee-maker", label: "Καφετιέρα" },
-        { value: "ac", label: "Κλιματιστικό" },
-        { value: "washing-machine", label: "Πλυντήριο" },
-        { value: "kitchen", label: "Κουζίνα" },
-        { value: "tv", label: "Τηλεόραση" },
-        { value: "hairdryer", label: "Πιστολάκι" },
-        { value: "iron", label: "Σίδερο" },
-      ],
-    },
-    {
-      key: "facilities",
-      title: "Εγκαταστάσεις",
-      options: [
-        { value: "parking", label: "Parking" },
-        { value: "pool", label: "Πισίνα" },
-        { value: "garden", label: "Κήπος" },
-        { value: "balcony", label: "Μπαλκόνι" },
-        { value: "bbq", label: "BBQ" },
-        { value: "gym", label: "Γυμναστήριο" },
-        { value: "spa", label: "Spa" },
-      ],
-    },
-    {
-      key: "rules",
-      title: "Ειδικοί κανόνες",
-      options: [
-        { value: "instant-booking", label: "Instant booking" },
-        { value: "self-checkin", label: "Self check-in" },
-        { value: "no-smoking", label: "Δεν επιτρέπεται το κάπνισμα" },
-        { value: "pets-allowed", label: "Επιτρέπονται κατοικίδια" },
-        { value: "parties-allowed", label: "Επιτρέπονται πάρτυ και εκδηλώσεις" },
-        { value: "baby-friendly", label: "Κατάλληλο για βρέφη (κάτω των 2 ετών)" },
-        { value: "smoker-friendly", label: "Κατάλληλο για καπνίζοντες" },
+        { value: "taxi", label: "Taxi" },
+        { value: "transfer", label: "Transfer" },
+        { value: "vip-transfer", label: "VIP Transfer" },
+        { value: "airport-transfer", label: "Airport Transfer" },
+        { value: "port-transfer", label: "Port Transfer" },
       ],
     },
   ],
-  "car-moto": [
+  "rent-a-car": [
     {
       key: "location",
       title: "Τοποθεσία",

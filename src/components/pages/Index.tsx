@@ -16,7 +16,7 @@ const Index = () => {
     "@type": "WebSite",
     name: "About Traveller",
     url: "https://aboutraveller.com",
-    description: "Ανακαλύψτε διαμονή, car rental, εστιατόρια και ταξιδιωτικές υπηρεσίες σε όλη την Ελλάδα.",
+    description: "Ανακαλύψτε taxi, transfer, rent a car, εστιατόρια και ταξιδιωτικές υπηρεσίες σε όλη την Ελλάδα.",
     inLanguage: "el",
     potentialAction: {
       "@type": "SearchAction",
@@ -46,8 +46,8 @@ const Index = () => {
   return (
     <>
       <SEOHead
-        title="About Traveller | Διαμονή, Car Rental, Εστιατόρια & Ταξίδια"
-        description="Ανακαλύψτε διαμονή, car rental, εστιατόρια και ταξιδιωτικές υπηρεσίες σε όλη την Ελλάδα. Το About Traveller σας βοηθά να βρείτε τις καλύτερες επιλογές για το ταξίδι σας."
+        title="About Traveller | Taxi, Transfer, Rent a Car, Εστιατόρια & Ταξίδια"
+        description="Ανακαλύψτε taxi, transfer, rent a car, εστιατόρια και ταξιδιωτικές υπηρεσίες σε όλη την Ελλάδα. Το About Traveller σας βοηθά να βρείτε τις καλύτερες επιλογές για το ταξίδι σας."
         path="/"
         jsonLd={[jsonLd, organizationLd]}
       />

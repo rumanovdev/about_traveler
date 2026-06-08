@@ -5,8 +5,8 @@ const SITE_URL = "https://aboutraveller.com";
 
 const STATIC_PAGES = [
   { path: "/", priority: "1.0", changefreq: "daily" },
-  { path: "/diamonh", priority: "0.9", changefreq: "daily" },
-  { path: "/car-moto", priority: "0.9", changefreq: "daily" },
+  { path: "/taxi-transfer", priority: "0.9", changefreq: "daily" },
+  { path: "/rent-a-car", priority: "0.9", changefreq: "daily" },
   { path: "/restaurants", priority: "0.9", changefreq: "daily" },
   { path: "/activities", priority: "0.9", changefreq: "daily" },
   { path: "/shop-more", priority: "0.9", changefreq: "daily" },

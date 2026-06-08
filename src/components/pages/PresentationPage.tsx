@@ -78,10 +78,10 @@ const PresentationPage = () => {
                     Τι είναι το About Traveller;
                   </h2>
                   <p className="text-2xl font-bold text-primary mb-6">
-                    Η πλατφόρμα κρατήσεων με 0% προμήθεια.
+                    Η πλατφόρμα που συνδέει ταξιδιώτες με τοπικές επιχειρήσεις.
                   </p>
                   <div className="space-y-2.5">
-                    {["Διαμονή (Ξενοδοχεία, Βίλες, Airbnb)", "Ενοικίαση Αυτοκινήτου", "Ενοικίαση Μηχανής/Scooter", "Εστιατόρια & Ταβέρνες", "Δραστηριότητες & Εκδρομές"].map((cat, i) => (
+                    {["Taxi / Transfer", "Rent a Car", "Εστιατόρια & Ταβέρνες", "Δραστηριότητες & Εκδρομές"].map((cat, i) => (
                       <div key={i} className="flex items-center gap-3 bg-secondary/50 rounded-lg px-4 py-2.5">
                         <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0" />
                         <span className="text-foreground font-medium text-sm">{cat}</span>
@@ -108,7 +108,7 @@ const PresentationPage = () => {
                   {[
                     { num: "1", title: "Αναζήτηση", desc: "Ο ταξιδιώτης αναζητά ανά κατηγορία και τοποθεσία." },
                     { num: "2", title: "Επικοινωνία", desc: "Επικοινωνεί απευθείας με την επιχείρηση (τηλ, email, chat)." },
-                    { num: "3", title: "Κράτηση", desc: "Κλείνει απευθείας χωρίς ενδιάμεσο και χωρίς προμήθεια." },
+                    { num: "3", title: "Κράτηση", desc: "Κλείνει απευθείας χωρίς ενδιάμεσο." },
                   ].map((step) => (
                     <div key={step.num} className="rounded-xl p-6 border border-border shadow-md" style={{ flex: '1', backgroundColor: 'white', pageBreakInside: 'avoid' }}>
                       <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-lg mb-4">
@@ -126,7 +126,7 @@ const PresentationPage = () => {
                   </div>
                   <div className="rounded-xl p-6 border border-border" style={{ flex: '1', backgroundColor: 'white', pageBreakInside: 'avoid' }}>
                     <h3 className="font-bold text-foreground mb-2">Για Ταξιδιώτες</h3>
-                    <p className="text-foreground text-sm">Δωρεάν αναζήτηση, αποθήκευση αγαπημένων, chat με επιχειρήσεις. 0% κόστος.</p>
+                    <p className="text-foreground text-sm">Δωρεάν αναζήτηση, αποθήκευση αγαπημένων, chat με επιχειρήσεις.</p>
                   </div>
                 </div>
               </div>
@@ -140,11 +140,11 @@ const PresentationPage = () => {
               </h2>
               <div className="grid md:grid-cols-2 gap-4">
                 {[
-                  { title: "0% Προμήθεια", desc: "Καμία χρέωση ανά κράτηση, σε αντίθεση με Booking.com (15-25%) ή Airbnb (3-15%)." },
+                  { title: "Απευθείας Κρατήσεις", desc: "Χωρίς ενδιάμεσους, σε αντίθεση με Booking.com ή Airbnb." },
                   { title: "Απευθείας Επικοινωνία", desc: "Η επιχείρηση έχει πλήρη έλεγχο στην επικοινωνία με τον πελάτη." },
                   { title: "Δίγλωσσο (GR/EN)", desc: "Προσέγγιση τόσο ελληνόφωνου κοινού όσο και διεθνών ταξιδιωτών." },
                   { title: "Analytics Dashboard", desc: "Στατιστικά προβολών, κλικ, emails. Real-time insights για τις καταχωρήσεις." },
-                  { title: "Χαμηλό Κόστος Συνδρομής", desc: "Μηνιαία συνδρομή αντί τεράστιων προμηθειών. Σταθερό, προβλέψιμο κόστος." },
+                  { title: "Χαμηλό Κόστος Συνδρομής", desc: "Μηνιαία συνδρομή με σταθερό, προβλέψιμο κόστος." },
                   { title: "Chat & Μηνύματα", desc: "Ενσωματωμένο σύστημα μηνυμάτων μεταξύ ταξιδιωτών και επιχειρήσεων." },
                 ].map((item, i) => (
                   <div key={i} className="flex gap-4 p-4 rounded-xl bg-white/10 backdrop-blur-sm">
@@ -179,14 +179,14 @@ const PresentationPage = () => {
                   </thead>
                   <tbody className="text-foreground">
                     {[
-                      ["Προμήθεια", "0%", "15-25%", "3-15%", "Διαφημίσεις"],
+                      ["Μοντέλο", "Συνδρομή", "15-25%", "3-15%", "Διαφημίσεις"],
                       ["Απευθείας Επικοινωνία", "✅", "❌", "❌", "Μερική"],
                       ["Κόστος για Ταξιδιώτη", "Δωρεάν", "Δωρεάν", "Service Fee", "Δωρεάν"],
                       ["SEO per Listing", "✅", "Περιορισμένο", "Περιορισμένο", "❌"],
                       ["Analytics Dashboard", "✅", "Βασικό", "Βασικό", "Πληρωμένο"],
                       ["Ελληνική Υποστήριξη", "✅", "Περιορισμένη", "Περιορισμένη", "❌"],
                       ["Chat", "✅", "❌", "✅", "❌"],
-                      ["Κόστος Εισόδου", "Χαμηλή Συνδρομή", "Υψηλό", "Μέτριο", "Υψηλό"],
+                      ["Κόστος Εισόδου", "Χαμηλή Συνδρομή", "Υψηλές Προμήθειες", "Μέτριο", "Υψηλό"],
                     ].map((row, i) => (
                       <tr key={i} className={`border-b border-border/50 ${i % 2 === 0 ? "bg-background" : "bg-muted/30"}`}>
                         <td className="py-3 px-5 font-medium text-foreground">{row[0]}</td>
@@ -214,7 +214,7 @@ const PresentationPage = () => {
                   <div className="bg-white/80 backdrop-blur-sm border border-destructive/20 rounded-xl p-6 shadow-sm">
                     <h3 className="font-bold text-foreground mb-3 text-lg">Booking.com</h3>
                     <ul className="space-y-2 text-sm text-foreground">
-                      <li>• Προμήθεια 15-25% ανά κράτηση</li>
+                      <li>• Υψηλές χρεώσεις ανά κράτηση (15-25%)</li>
                       <li>• Δεν επιτρέπει απευθείας επικοινωνία</li>
                       <li>• Ελέγχει τη σχέση πελάτη-ξενοδόχου</li>
                       <li>• Πίεση για χαμηλές τιμές (rate parity)</li>
@@ -269,7 +269,7 @@ const PresentationPage = () => {
                   <h3 className="text-lg font-bold text-foreground mb-2">Μηνιαία Συνδρομή</h3>
                   <div className="text-4xl font-bold text-primary my-4">€15/μήνα</div>
                   <ul className="space-y-2 text-sm text-foreground font-bold text-left">
-                    <li className="flex items-center gap-2"><Check size={14} className="text-primary flex-shrink-0" /> 0% προμήθεια κρατήσεων</li>
+                    <li className="flex items-center gap-2"><Check size={14} className="text-primary flex-shrink-0" /> Απεριόριστες κρατήσεις</li>
                     <li className="flex items-center gap-2"><Check size={14} className="text-primary flex-shrink-0" /> Απεριόριστες καταχωρήσεις</li>
                     <li className="flex items-center gap-2"><Check size={14} className="text-primary flex-shrink-0" /> Analytics dashboard</li>
                     <li className="flex items-center gap-2"><Check size={14} className="text-primary flex-shrink-0" /> Απευθείας leads</li>
@@ -302,7 +302,7 @@ const PresentationPage = () => {
                       </li>
                       <li className="flex items-start gap-3">
                         <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0 mt-2" />
-                        <span>Rent a car & moto rental εταιρείες</span>
+                        <span>Rent a car εταιρείες & Taxi/Transfer</span>
                       </li>
                       <li className="flex items-start gap-3">
                         <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0 mt-2" />

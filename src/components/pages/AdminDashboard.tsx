@@ -20,8 +20,10 @@ import {
   LogOut,
   Home,
   FileText,
+  MessageSquare,
 } from "lucide-react";
 import AdminBlogManager from "@/components/admin/AdminBlogManager";
+import DashboardMessages from "@/components/dashboard/DashboardMessages";
 import {
   getAllListings,
   updateListingStatus,
@@ -181,6 +183,10 @@ const AdminDashboard = () => {
           <Tabs defaultValue="listings" className="space-y-6">
             <TabsList>
               <TabsTrigger value="listings">{t.adListings}</TabsTrigger>
+              <TabsTrigger value="messages" className="flex items-center gap-1.5">
+                <MessageSquare size={14} />
+                {lang === "el" ? "Μηνύματα" : "Messages"}
+              </TabsTrigger>
               <TabsTrigger value="users">{t.adUsers}</TabsTrigger>
               <TabsTrigger value="subscriptions">{t.adSubscriptions}</TabsTrigger>
               <TabsTrigger value="blog">Blog</TabsTrigger>
@@ -253,6 +259,11 @@ const AdminDashboard = () => {
                   })}
                 </div>
               )}
+            </TabsContent>
+
+            {/* ── Messages Tab ── */}
+            <TabsContent value="messages">
+              <DashboardMessages isAdmin />
             </TabsContent>
 
             {/* ── Users Tab ── */}

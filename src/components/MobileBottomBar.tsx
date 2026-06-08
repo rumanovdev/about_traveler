@@ -15,8 +15,8 @@ const MobileBottomBar = () => {
   const { query, predictions, isOpen, search, select, close } = usePlacesAutocomplete();
 
   const isCategoryOrListing =
-    path.startsWith("/diamonh") ||
-    path.startsWith("/car-moto") ||
+    path.startsWith("/taxi-transfer") ||
+    path.startsWith("/rent-a-car") ||
     path.startsWith("/restaurants") ||
     path.startsWith("/activities") ||
     path.startsWith("/listing/");
@@ -24,8 +24,8 @@ const MobileBottomBar = () => {
   if (path.startsWith("/dashboard") || path.startsWith("/admin") || isCategoryOrListing) return null;
 
   const categories = [
-    { label: t.accommodation, slug: "diamonh", icon: Building },
-    { label: "Car & Moto", slug: "car-moto", icon: Car },
+    { label: "Taxi / Transfer", slug: "taxi-transfer", icon: Building },
+    { label: "Rent a Car", slug: "rent-a-car", icon: Car },
     { label: t.restaurants, slug: "restaurants", icon: UtensilsCrossed },
   ];
 

@@ -498,7 +498,7 @@ const ListingFormDialog = ({ open, onOpenChange, listing, userId }: ListingFormD
                   .filter((cat) => cat.slug !== "moto-rental")
                   .map((cat) => {
                     const isCar = cat.slug === "car-rental";
-                    const label = isCar ? "Car & Moto" : cat.title;
+                    const label = isCar ? "Rent a Car" : cat.title;
                     return (
                       <SelectItem key={cat.id} value={cat.id}>
                         {label}

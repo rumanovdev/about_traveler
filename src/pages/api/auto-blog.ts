@@ -165,7 +165,7 @@ export const GET: APIRoute = async ({ request }) => {
       system: "Είσαι SEO expert για ταξιδιωτικό site για την Ελλάδα. Επιστρέφεις ΜΟΝΟ JSON.",
       messages: [{
         role: "user",
-        content: `Είναι ${month}. Το site aboutraveller.com έχει κατηγορίες: Διαμονή, Car & Moto rental, Εστιατόρια, Δραστηριότητες στην Ελλάδα.
+        content: `Είναι ${month}. Το site aboutraveller.com έχει κατηγορίες: Taxi/Transfer, Rent a Car, Εστιατόρια, Δραστηριότητες στην Ελλάδα.
 
 Άρθρα που υπάρχουν ήδη (ΜΗΝ επαναλάβεις):
 ${existingTitles || "κανένα ακόμα"}

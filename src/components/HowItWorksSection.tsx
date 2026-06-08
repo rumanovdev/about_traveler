@@ -8,8 +8,8 @@ const HowItWorksSection = () => {
     {
       icon: Search,
       desc: lang === "el"
-        ? "Ανακαλύψτε διαμονή, ενοικίαση αυτοκινήτου, μηχανής και εστιατόρια σε όλη την Ελλάδα. Φιλτράρετε ανά τοποθεσία και κατηγορία για να βρείτε ακριβώς αυτό που ψάχνετε."
-        : "Discover accommodation, car rental, motorcycle rental and restaurants across Greece. Filter by location and category to find exactly what you need.",
+        ? "Ανακαλύψτε taxi, transfer, ενοικίαση αυτοκινήτου και εστιατόρια σε όλη την Ελλάδα. Φιλτράρετε ανά τοποθεσία και κατηγορία για να βρείτε ακριβώς αυτό που ψάχνετε."
+        : "Discover taxi, transfer, car rental and restaurants across Greece. Filter by location and category to find exactly what you need.",
     },
     {
       icon: MessageCircle,
@@ -20,8 +20,8 @@ const HowItWorksSection = () => {
     {
       icon: Shield,
       desc: lang === "el"
-        ? "Περιηγηθείτε με ασφάλεια. Όλες οι επιχειρήσεις είναι επαληθευμένες και οι πληροφορίες ενημερωμένες. 0% προμήθεια για τους ταξιδιώτες."
-        : "Browse safely. All businesses are verified and information is up to date. 0% commission for travelers.",
+        ? "Περιηγηθείτε με ασφάλεια. Όλες οι επιχειρήσεις είναι επαληθευμένες και οι πληροφορίες ενημερωμένες."
+        : "Browse safely. All businesses are verified and information is up to date.",
     },
   ];
 

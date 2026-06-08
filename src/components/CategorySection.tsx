@@ -1,18 +1,18 @@
 import { useLanguage } from "@/hooks/useLanguage";
 
 const categoryData = [
-  { slug: "diamonh",    webp: "/assets/cat-accommodation.webp", jpg: "/assets/cat-accommodation.jpg" },
-  { slug: "car-moto",  webp: "/assets/cat-car-rental.webp",    jpg: "/assets/cat-car-rental.jpg" },
-  { slug: "restaurants",webp: "/assets/cat-restaurants.webp",  jpg: "/assets/cat-restaurants.jpg" },
-  { slug: "activities", webp: "/assets/cat-activities.webp",   jpg: "/assets/cat-activities.jpg" },
+  { slug: "taxi-transfer", webp: "/assets/cat-accommodation.webp", jpg: "/assets/cat-accommodation.jpg" },
+  { slug: "rent-a-car",   webp: "/assets/cat-car-rental.webp",    jpg: "/assets/cat-car-rental.jpg" },
+  { slug: "restaurants",   webp: "/assets/cat-restaurants.webp",   jpg: "/assets/cat-restaurants.jpg" },
+  { slug: "activities",    webp: "/assets/cat-activities.webp",    jpg: "/assets/cat-activities.jpg" },
 ];
 
 const CategorySection = () => {
   const { lang } = useLanguage();
 
   const labels: Record<string, { title: string; description: string }> = {
-    diamonh:     { title: lang === "el" ? "Διαμονή" : "Accommodation",     description: lang === "el" ? "Ξενοδοχεία, βίλες & διαμερίσματα για κάθε γούστο" : "Hotels, villas & apartments for every taste" },
-    "car-moto":  { title: "Car & Moto",                                      description: lang === "el" ? "Αυτοκίνητα, μηχανές & σκούτερ για τις διαδρομές σας" : "Cars, motorcycles & scooters for your journeys" },
+    "taxi-transfer": { title: "Taxi / Transfer",                              description: lang === "el" ? "Μεταφορές & transfers για κάθε προορισμό" : "Transfers & transportation for every destination" },
+    "rent-a-car":    { title: "Rent a Car",                                   description: lang === "el" ? "Αυτοκίνητα για τις διαδρομές σας" : "Cars for your journeys" },
     restaurants: { title: lang === "el" ? "Φαγητό & Ποτό" : "Food & Drink", description: lang === "el" ? "Γεύσεις που αξίζει να δοκιμάσετε σε κάθε προορισμό" : "Flavors worth trying at every destination" },
     activities:  { title: lang === "el" ? "Δραστηριότητες" : "Activities",   description: lang === "el" ? "Εμπειρίες & περιπέτειες που δεν θα ξεχάσετε" : "Experiences & adventures you won't forget" },
   };

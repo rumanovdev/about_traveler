@@ -10,7 +10,6 @@ const BusinessModelPage = () => {
 
   const benefits = lang === "el"
     ? [
-        "0% προμήθεια σε κάθε κράτηση",
         "Πλήρης έλεγχος της τιμολόγησής σας",
         "Απευθείας επικοινωνία με τους πελάτες σας",
         "Προβολή σε χιλιάδες ταξιδιώτες",
@@ -18,7 +17,6 @@ const BusinessModelPage = () => {
         "Υποστήριξη σε Ελληνικά & Αγγλικά",
       ]
     : [
-        "0% commission on every booking",
         "Full control over your pricing",
         "Direct communication with your customers",
         "Exposure to thousands of travelers",
@@ -32,8 +30,8 @@ const BusinessModelPage = () => {
         title={lang === "el" ? "Το Business Model μας" : "Our Business Model"}
         description={
           lang === "el"
-            ? "Μάθετε πώς το About Traveller προσφέρει 0% προμήθεια και βοηθά την επιχείρησή σας να αναπτυχθεί."
-            : "Learn how About Traveller offers 0% commission and helps your business grow."
+            ? "Μάθετε πώς το About Traveller βοηθά την επιχείρησή σας να αναπτυχθεί."
+            : "Learn how About Traveller helps your business grow."
         }
         path="/business-model"
       />
@@ -41,12 +39,12 @@ const BusinessModelPage = () => {
       <main className="min-h-screen pt-32 pb-20">
         <div className="container max-w-3xl mx-auto px-4">
           <h1 className="text-3xl md:text-5xl font-display font-bold text-foreground mb-6 text-center">
-            {lang === "el" ? "Μηδενικές Προμήθειες. Μέγιστη Αξία." : "Zero Commissions. Maximum Value."}
+            {lang === "el" ? "Μέγιστη Αξία για την Επιχείρησή σας." : "Maximum Value for Your Business."}
           </h1>
           <p className="text-lg text-muted-foreground text-center mb-12 max-w-xl mx-auto">
             {lang === "el"
-              ? "Στο About Traveller πιστεύουμε ότι οι επιχειρήσεις δεν πρέπει να πληρώνουν υπέρογκες προμήθειες για κάθε κράτηση. Γι' αυτό προσφέρουμε ένα μοντέλο με 0% προμήθεια."
-              : "At About Traveller, we believe businesses shouldn't pay excessive commissions for every booking. That's why we offer a 0% commission model."}
+              ? "Στο About Traveller πιστεύουμε ότι οι επιχειρήσεις αξίζουν την καλύτερη προβολή. Προσφέρουμε ένα μοντέλο συνδρομής με απευθείας πρόσβαση σε χιλιάδες ταξιδιώτες."
+              : "At About Traveller, we believe businesses deserve the best exposure. We offer a subscription model with direct access to thousands of travelers."}
           </p>
 
           <div className="bg-secondary/50 rounded-2xl p-8 md:p-12 mb-12">

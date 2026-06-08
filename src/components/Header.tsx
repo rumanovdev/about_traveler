@@ -18,7 +18,7 @@ const Header = () => {
   const { t, lang, setLang } = useLanguage();
   const pathname = typeof window !== 'undefined' ? window.location.pathname : '/';
   const isHome = pathname === "/";
-  const transparentPages = ["/", "/diamonh", "/car-moto", "/restaurants"];
+  const transparentPages = ["/", "/taxi-transfer", "/rent-a-car", "/restaurants"];
   const isTransparent = transparentPages.includes(pathname);
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);

@@ -29,8 +29,8 @@ const Footer = () => {
           <div>
             <h4 className="text-base font-semibold text-primary-foreground mb-4">{t.categories}</h4>
             <nav className="flex flex-col gap-2">
-              <a href="/diamonh" className="text-sm text-primary-foreground hover:text-primary-foreground/80 transition-colors">{t.accommodation}</a>
-              <a href="/car-moto" className="text-sm text-primary-foreground hover:text-primary-foreground/80 transition-colors">Car & Moto</a>
+              <a href="/taxi-transfer" className="text-sm text-primary-foreground hover:text-primary-foreground/80 transition-colors">Taxi / Transfer</a>
+              <a href="/rent-a-car" className="text-sm text-primary-foreground hover:text-primary-foreground/80 transition-colors">Rent a Car</a>
               <a href="/restaurants" className="text-sm text-primary-foreground hover:text-primary-foreground/80 transition-colors">{t.restaurants}</a>
               <a href="/activities" className="text-sm text-primary-foreground hover:text-primary-foreground/80 transition-colors">{t.activities}</a>
               

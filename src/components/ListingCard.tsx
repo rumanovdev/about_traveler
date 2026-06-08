@@ -83,6 +83,7 @@ const ListingCard = ({ listing, onHover, highlighted }: ListingCardProps) => {
       className={`group relative cursor-pointer transition-all duration-200 ${highlighted ? "scale-[1.01]" : ""}`}
       onMouseEnter={() => { onHover?.(listing.id); setIsHovered(true); }}
       onMouseLeave={() => { onHover?.(null); setIsHovered(false); }}
+      onClick={() => { window.location.href = `/listing/${listing.slug}`; }}
     >
       {/* Image carousel */}
       <div

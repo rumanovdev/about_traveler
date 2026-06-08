@@ -29,8 +29,8 @@ const HowItWorksPage = () => {
       title: lang === "el" ? "Αναζητήστε" : "Search",
       desc:
         lang === "el"
-          ? "Ανακαλύψτε διαμονή, ενοικίαση αυτοκινήτου, μηχανής και εστιατόρια σε όλη την Ελλάδα. Φιλτράρετε ανά τοποθεσία και κατηγορία για να βρείτε ακριβώς αυτό που ψάχνετε."
-          : "Discover accommodation, car rental, motorcycle rental and restaurants across Greece. Filter by location and category to find exactly what you need.",
+          ? "Ανακαλύψτε taxi, transfer, ενοικίαση αυτοκινήτου και εστιατόρια σε όλη την Ελλάδα. Φιλτράρετε ανά τοποθεσία και κατηγορία για να βρείτε ακριβώς αυτό που ψάχνετε."
+          : "Discover taxi, transfer, car rental and restaurants across Greece. Filter by location and category to find exactly what you need.",
     },
     {
       icon: MessageCircle,
@@ -45,8 +45,8 @@ const HowItWorksPage = () => {
       title: lang === "el" ? "Ταξιδέψτε" : "Travel",
       desc:
         lang === "el"
-          ? "Περιηγηθείτε με ασφάλεια. Όλες οι επιχειρήσεις είναι επαληθευμένες και οι πληροφορίες ενημερωμένες. 0% προμήθεια για τους ταξιδιώτες."
-          : "Browse safely. All businesses are verified and information is up to date. 0% commission for travelers.",
+          ? "Περιηγηθείτε με ασφάλεια. Όλες οι επιχειρήσεις είναι επαληθευμένες και οι πληροφορίες ενημερωμένες."
+          : "Browse safely. All businesses are verified and information is up to date.",
     },
   ];
 
@@ -90,8 +90,8 @@ const HowItWorksPage = () => {
     },
     {
       icon: CheckCircle,
-      value: "0%",
-      label: lang === "el" ? "Προμήθεια" : "Commission",
+      value: "100%",
+      label: lang === "el" ? "Αξιοπιστία" : "Reliability",
     },
   ];
 
@@ -117,8 +117,8 @@ const HowItWorksPage = () => {
             </h1>
             <p className="text-lg md:text-xl text-primary-foreground max-w-2xl mx-auto">
               {lang === "el"
-                ? "Η πλατφόρμα που συνδέει ταξιδιώτες με τις καλύτερες τοπικές επιχειρήσεις στην Ελλάδα — απλά, γρήγορα και χωρίς προμήθεια."
-                : "The platform that connects travelers with the best local businesses in Greece — simply, quickly and commission-free."}
+                ? "Η πλατφόρμα που συνδέει ταξιδιώτες με τις καλύτερες τοπικές επιχειρήσεις στην Ελλάδα — απλά και γρήγορα."
+                : "The platform that connects travelers with the best local businesses in Greece — simply and quickly."}
             </p>
           </div>
         </section>
@@ -149,8 +149,8 @@ const HowItWorksPage = () => {
                 {
                   icon: Euro,
                   text: lang === "el"
-                    ? <>Καμία προμήθεια<br />Κανένα κόστος</>
-                    : <>No commission<br />No cost</>,
+                    ? <>Απευθείας<br />Επικοινωνία</>
+                    : <>Direct<br />Contact</>,
                 },
                 {
                   icon: Plane,

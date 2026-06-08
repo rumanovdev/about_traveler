@@ -24,16 +24,16 @@ const HeroSection = () => {
 
 
   const categoryOptions = [
-    { label: lang === "el" ? "Διαμονή" : "Accommodation", slug: "diamonh" },
-    { label: "Car & Moto", slug: "car-moto" },
+    { label: "Taxi / Transfer", slug: "taxi-transfer" },
+    { label: "Rent a Car", slug: "rent-a-car" },
     { label: lang === "el" ? "Φαγητό & Ποτό" : "Food & Drink", slug: "restaurants" },
     { label: lang === "el" ? "Δραστηριότητες" : "Activities", slug: "activities" },
   ];
 
 
   const categoryFilters = [
-    { label: t.accommodation, slug: "diamonh" },
-    { label: "Car & Moto", slug: "car-moto" },
+    { label: "Taxi / Transfer", slug: "taxi-transfer" },
+    { label: "Rent a Car", slug: "rent-a-car" },
     { label: t.foodDrink, slug: "restaurants" },
     { label: t.activities, slug: "activities" },
   ];
@@ -59,8 +59,8 @@ const HeroSection = () => {
     } else if (activeFilter) {
       window.location.href = `/${activeFilter}${locationParam}`;
     } else {
-      // Default to accommodation if no category selected
-      window.location.href = `/diamonh${locationParam}`;
+      // Default to taxi-transfer if no category selected
+      window.location.href = `/taxi-transfer${locationParam}`;
     }
   };
 
@@ -151,7 +151,7 @@ const HeroSection = () => {
                 className="w-full flex items-center gap-3 px-5 py-4"
               >
                 <Search size={18} className="text-foreground flex-shrink-0" />
-                <span className="text-sm text-foreground flex-1 text-left">{selectedCategory || (lang === "el" ? "Διαμονή" : "Accommodation")}</span>
+                <span className="text-sm text-foreground flex-1 text-left">{selectedCategory || "Taxi / Transfer"}</span>
                 <ChevronDown size={16} className={`text-foreground transition-transform ${categoryOpen ? "rotate-180" : ""}`} />
               </button>
               {categoryOpen && (

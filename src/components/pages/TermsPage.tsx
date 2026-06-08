@@ -20,19 +20,19 @@ const TermsPage = () => {
           icon: Users,
           title: "2. Χρήστες / Ταξιδιώτες",
           content:
-            "Οι ταξιδιώτες μπορούν να αναζητούν και να επικοινωνούν απευθείας με επιχειρήσεις μέσω της πλατφόρμας χωρίς καμία χρέωση. Η About Traveller δεν χρεώνει προμήθεια στους ταξιδιώτες. Οι χρήστες είναι υπεύθυνοι για την ακρίβεια των στοιχείων τους.",
+            "Οι ταξιδιώτες μπορούν να αναζητούν και να επικοινωνούν απευθείας με επιχειρήσεις μέσω της πλατφόρμας. Οι χρήστες είναι υπεύθυνοι για την ακρίβεια των στοιχείων τους.",
         },
         {
           icon: Store,
           title: "3. Συνεργάτες / Επιχειρήσεις",
           content:
-            "Οι επιχειρήσεις μπορούν να εγγραφούν ως συνεργάτες και να δημιουργήσουν καταχωρίσεις στις κατηγορίες Διαμονή, Ενοικίαση Αυτοκινήτου, Ενοικίαση Μηχανής και Εστιατόρια. Κάθε συνεργάτης είναι υπεύθυνος για την ακρίβεια των πληροφοριών της καταχώρισής του.",
+            "Οι επιχειρήσεις μπορούν να εγγραφούν ως συνεργάτες και να δημιουργήσουν καταχωρίσεις στις κατηγορίες Taxi/Transfer, Rent a Car, Εστιατόρια και Δραστηριότητες. Κάθε συνεργάτης είναι υπεύθυνος για την ακρίβεια των πληροφοριών της καταχώρισής του.",
         },
         {
           icon: CreditCard,
           title: "4. Συνδρομές & Πληρωμές",
           content:
-            "Η πρόσβαση στην πλατφόρμα για συνεργάτες γίνεται μέσω μηνιαίας συνδρομής. Η About Traveller λειτουργεί με 0% προμήθεια για τους ταξιδιώτες. Οι πληρωμές επεξεργάζονται με ασφάλεια μέσω Stripe.",
+            "Η πρόσβαση στην πλατφόρμα για συνεργάτες γίνεται μέσω μηνιαίας συνδρομής. Οι πληρωμές επεξεργάζονται με ασφάλεια μέσω Stripe.",
         },
         {
           icon: AlertTriangle,
@@ -64,19 +64,19 @@ const TermsPage = () => {
           icon: Users,
           title: "2. Users / Travelers",
           content:
-            "Travelers can search and contact businesses directly through the platform at no charge. About Traveller does not charge commission to travelers. Users are responsible for the accuracy of their information.",
+            "Travelers can search and contact businesses directly through the platform. Users are responsible for the accuracy of their information.",
         },
         {
           icon: Store,
           title: "3. Partners / Businesses",
           content:
-            "Businesses can register as partners and create listings in categories: Accommodation, Car Rental, Moto Rental, and Restaurants. Each partner is responsible for the accuracy of their listing information.",
+            "Businesses can register as partners and create listings in categories: Taxi/Transfer, Rent a Car, Restaurants, and Activities. Each partner is responsible for the accuracy of their listing information.",
         },
         {
           icon: CreditCard,
           title: "4. Subscriptions & Payments",
           content:
-            "Partner access to the platform is through a monthly subscription. About Traveller operates with 0% commission for travelers. Payments are securely processed via Stripe.",
+            "Partner access to the platform is through a monthly subscription. Payments are securely processed via Stripe.",
         },
         {
           icon: AlertTriangle,

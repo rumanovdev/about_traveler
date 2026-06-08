@@ -1,14 +1,18 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
-import { getMyMessages, markMessageRead, deleteMessage } from "@/lib/api";
+import { getMyMessages, getAllMessages, markMessageRead, deleteMessage } from "@/lib/api";
 import { Mail, MailOpen, Clock, Building, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import { el, enUS } from "date-fns/locale";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
-const DashboardMessages = () => {
+interface DashboardMessagesProps {
+  isAdmin?: boolean;
+}
+
+const DashboardMessages = ({ isAdmin = false }: DashboardMessagesProps) => {
   const { user } = useAuth();
   const { lang } = useLanguage();
   const queryClient = useQueryClient();
@@ -16,8 +20,8 @@ const DashboardMessages = () => {
   const localeObj = lang === "el" ? el : enUS;
 
   const { data: messages = [], isLoading } = useQuery({
-    queryKey: ["my-messages", user?.id],
-    queryFn: () => getMyMessages(user!.id),
+    queryKey: isAdmin ? ["all-messages"] : ["my-messages", user?.id],
+    queryFn: () => isAdmin ? getAllMessages() : getMyMessages(user!.id),
     enabled: !!user,
   });
 

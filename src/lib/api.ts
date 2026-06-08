@@ -292,6 +292,16 @@ export async function getMyMessages(userId: string) {
   return (data as any[]) || [];
 }
 
+export async function getAllMessages() {
+  const { data, error } = await supabase
+    .from("contact_messages" as any)
+    .select("*, listings(business_name, slug)" as any)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  return (data as any[]) || [];
+}
+
 export async function markMessageRead(messageId: string) {
   const { error } = await supabase
     .from("contact_messages" as any)
