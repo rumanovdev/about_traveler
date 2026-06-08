@@ -181,12 +181,12 @@ const ListingPage = ({ slug }: { slug: string }) => {
                     href={listing.website.startsWith("http") ? listing.website : `https://${listing.website}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 text-foreground hover:text-primary transition-colors"
+                    className="flex items-center gap-3 text-foreground hover:text-primary transition-colors min-w-0 overflow-hidden"
                   >
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                       <Globe size={18} className="text-primary" />
                     </div>
-                    <span className="font-medium text-sm">{listing.website.replace(/^https?:\/\//, "")}</span>
+                    <span className="font-medium text-sm truncate">{listing.website.replace(/^https?:\/\//, "")}</span>
                   </a>
                 )}
 
