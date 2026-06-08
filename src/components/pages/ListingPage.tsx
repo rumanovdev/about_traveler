@@ -137,7 +137,7 @@ const ListingPage = ({ slug }: { slug: string }) => {
             </div>
 
             <div>
-              <div className="bg-secondary/50 rounded-2xl p-6 space-y-4 sticky top-24">
+              <div className="bg-secondary/50 rounded-2xl p-8 space-y-4 sticky top-24 mb-8">
                 {/* Call to Book + WhatsApp */}
                 <h2 className="text-lg font-display font-semibold text-foreground">Call to Book</h2>
                 {listing.phone && (
