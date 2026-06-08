@@ -488,7 +488,7 @@ const ListingFormDialog = ({ open, onOpenChange, listing, userId }: ListingFormD
               </SelectTrigger>
               <SelectContent>
                 {categories
-                  .filter((cat) => cat.slug !== "moto-rental")
+                  .filter((cat) => cat.slug !== "moto-rental" && !cat.slug.startsWith("shop"))
                   .map((cat) => {
                     const isCar = cat.slug === "car-rental";
                     const isTaxi = cat.slug === "diamonh";
