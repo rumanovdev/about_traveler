@@ -1,0 +1,12 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AppShell from '../components/AppShell';
+---
+<Layout
+  title="Καταμέτρηση"
+  description="Καταγραφή κρατήσεων και συνεργατών."
+  path="/booking-tracker"
+  noindex
+>
+  <AppShell client:only="react" page="BookingTrackerPage" />
+</Layout>

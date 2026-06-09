@@ -320,6 +320,96 @@ export async function deleteMessage(messageId: string) {
 
 // ── Admin: Delete User ──
 
+// ── Booking Tracker ──
+
+export type BookingCategory = "taxi_transfer" | "rent_a_car" | "activity";
+
+export interface BookingRecord {
+  id?: string;
+  user_id: string;
+  category: BookingCategory;
+  date?: string | null;
+  first_name?: string | null;
+  last_name?: string | null;
+  time?: string | null;
+  pickup_location?: string | null;
+  destination?: string | null;
+  final_price?: number | null;
+  partner_name?: string | null;
+}
+
+export async function getBookingRecords(
+  userId: string,
+  category: BookingCategory,
+  adminFilterUserId?: string
+) {
+  let query = supabase
+    .from("booking_records" as any)
+    .select("*")
+    .eq("category", category)
+    .order("created_at", { ascending: true });
+
+  if (adminFilterUserId) {
+    query = query.eq("user_id", adminFilterUserId);
+  } else {
+    query = query.eq("user_id", userId);
+  }
+
+  const { data, error } = await query;
+  if (error) throw error;
+  return (data as any[]) || [];
+}
+
+export async function upsertBookingRecord(record: BookingRecord) {
+  if (record.id) {
+    const { id, user_id, category, ...updates } = record;
+    const { data, error } = await supabase
+      .from("booking_records" as any)
+      .update(updates as any)
+      .eq("id", id)
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
+  } else {
+    const { data, error } = await supabase
+      .from("booking_records" as any)
+      .insert(record as any)
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
+  }
+}
+
+export async function deleteBookingRecord(id: string) {
+  const { error } = await supabase
+    .from("booking_records" as any)
+    .delete()
+    .eq("id", id);
+  if (error) throw error;
+}
+
+export async function getPartnerUsers() {
+  const { data, error } = await supabase
+    .from("user_roles")
+    .select("user_id")
+    .eq("role", "partner");
+  if (error) throw error;
+
+  if (!data || data.length === 0) return [];
+
+  const userIds = data.map((r) => r.user_id);
+  const { data: profiles, error: profileError } = await supabase
+    .from("profiles")
+    .select("id, full_name, email")
+    .in("id", userIds);
+  if (profileError) throw profileError;
+  return (profiles as any[]) || [];
+}
+
+// ── Admin: Delete User ──
+
 export async function deleteUser(userId: string) {
   const { data: sessionData } = await supabase.auth.getSession();
   const token = sessionData?.session?.access_token;

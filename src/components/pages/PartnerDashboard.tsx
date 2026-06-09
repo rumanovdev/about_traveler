@@ -114,6 +114,10 @@ const PartnerDashboard = () => {
   }, [user, lang, queryClient]);
 
   const handleTabChange = (tab: string) => {
+    if (tab === "booking-tracker") {
+      window.location.href = "/booking-tracker";
+      return;
+    }
     setActiveTab(tab);
     const url = new URL(window.location.href);
     url.searchParams.set("tab", tab);

@@ -9,6 +9,7 @@ import {
   UserCog,
   LogOut,
   Home,
+  ClipboardList,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -109,6 +110,7 @@ const DashboardSidebar = ({ activeTab, onTabChange }: DashboardSidebarProps) => 
   const partnerItems = [
     { title: "Listings", icon: Store, value: "listings" },
     { title: lang === "el" ? "Πληρωμές" : "Payments", icon: CreditCard, value: "subscription" },
+    { title: lang === "el" ? "Καταμέτρηση" : "Booking Tracker", icon: ClipboardList, value: "booking-tracker" },
   ];
 
   const accountItems = [

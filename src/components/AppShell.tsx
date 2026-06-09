@@ -40,6 +40,7 @@ const pages: Record<string, React.LazyExoticComponent<any>> = {
   TermsPage: lazy(() => import("@/components/pages/TermsPage")),
   BusinessModelPage: lazy(() => import("@/components/pages/BusinessModelPage")),
   PresentationPage: lazy(() => import("@/components/pages/PresentationPage")),
+  BookingTrackerPage: lazy(() => import("@/components/pages/BookingTrackerPage")),
   NotFound: lazy(() => import("@/components/pages/NotFound")),
 };
 
