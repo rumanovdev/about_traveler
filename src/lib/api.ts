@@ -391,21 +391,9 @@ export async function deleteBookingRecord(id: string) {
 }
 
 export async function getPartnerUsers() {
-  const { data, error } = await supabase
-    .from("user_roles")
-    .select("user_id")
-    .eq("role", "partner");
+  const { data, error } = await supabase.rpc("get_partner_users");
   if (error) throw error;
-
-  if (!data || data.length === 0) return [];
-
-  const userIds = data.map((r) => r.user_id);
-  const { data: profiles, error: profileError } = await supabase
-    .from("profiles")
-    .select("id, display_name")
-    .in("id", userIds);
-  if (profileError) throw profileError;
-  return (profiles as any[]) || [];
+  return (data as any[]) || [];
 }
 
 // ── Admin: Delete User ──
