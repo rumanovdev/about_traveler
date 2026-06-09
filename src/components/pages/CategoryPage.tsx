@@ -29,6 +29,7 @@ const categoryMeta: Record<string, { title: string; seoTitle: string; subtitle: 
     subtitle: "Μεταφορές & Transfers",
     description: "Βρείτε υπηρεσίες taxi και transfer σε όλη την Ελλάδα. Δείτε στοιχεία επικοινωνίας και κλείστε τη μεταφορά σας εύκολα.",
     image: catAccommodation,
+    fetchSlugs: "diamonh",
   },
   "rent-a-car": {
     title: "Rent a Car",
