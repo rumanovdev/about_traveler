@@ -402,7 +402,7 @@ export async function getPartnerUsers() {
   const userIds = data.map((r) => r.user_id);
   const { data: profiles, error: profileError } = await supabase
     .from("profiles")
-    .select("id, display_name, email")
+    .select("id, display_name")
     .in("id", userIds);
   if (profileError) throw profileError;
   return (profiles as any[]) || [];

@@ -145,7 +145,7 @@ const BookingTrackerPage = () => {
                   <SelectContent>
                     {partners.map((p: any) => (
                       <SelectItem key={p.id} value={p.id}>
-                        {p.display_name || p.email || p.id}
+                        {p.display_name || p.id}
                       </SelectItem>
                     ))}
                   </SelectContent>
