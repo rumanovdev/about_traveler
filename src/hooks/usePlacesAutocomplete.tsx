@@ -40,7 +40,7 @@ export function loadGoogleMaps() {
   }
 
   const script = document.createElement("script");
-  script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyCHolRt9kgZGYat4IQYvKFUpz7fVfZ067Y&libraries=places";
+  script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAZ_Fx0CDUhinJh999oeaPoTc46m7q_cf8&libraries=places";
   script.async = true;
   script.defer = true;
   script.dataset.googleMaps = "places";
